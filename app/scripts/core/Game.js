@@ -57,7 +57,7 @@ define([
             ];
 
             AssetsLoader.loadImages(images, function () {
-                console.log('Game#loadAssets');
+                // console.log('Game#loadAssets');
                 p.done();
             });
 
@@ -71,7 +71,7 @@ define([
             this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points-1');
             this.firebaseRafts = new Firebase('https://dumplings.firebaseio.com/firebase-rafts');
 
-            console.log('Game#setupFirebase');
+            // console.log('Game#setupFirebase');
             p.done();
             return p;
         },
@@ -81,7 +81,7 @@ define([
 
             this.phaser = new Phaser.Game(Game.WIDTH + 100, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
-            console.log('Game#setupPhaser');
+            // console.log('Game#setupPhaser');
             p.done();
             return p;
         },
@@ -100,7 +100,7 @@ define([
             this.localPlayer = new Player();
             this.localPlayer.data.id = playerID;
 
-            console.log('Game#setupLocalPlayer');
+            // console.log('Game#setupLocalPlayer');
             p.done();
             return p;
         },
@@ -140,7 +140,7 @@ define([
                 self.removePlayerById(snap.id);
             });
 
-            console.log('Game#setupFirebasePlayersEvents');
+            // console.log('Game#setupFirebasePlayersEvents');
             p.done();
             return p;
         },

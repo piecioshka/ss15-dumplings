@@ -138,14 +138,14 @@ define([
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.pointGroup, function (sprite, pointTile) {
                 pointTile.destroy();
 
-                App.game.updatePoints(App.game.pointList);
-
                 var positionX = pointTile.x / 32;
                 var positionY = pointTile.y / 32;
 
                 App.game.pointList = _.filter(App.game.pointList, function (tile) {
                     return !((tile.x === positionX) && (tile.y === positionY));
                 });
+
+                App.game.updatePoints(App.game.pointList);
             }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {
