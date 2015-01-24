@@ -21,11 +21,6 @@ define([
         jumpTimer: 0,
         jumpButton: undefined,
 
-        tileSize: {
-            width: 32,
-            height: 32
-        },
-
         defaultPointList: [
             { x: 4, y: 1 },
             { x: 8, y: 4 },

@@ -151,6 +151,14 @@ define([
 
             this.firebasePoints.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
+                console.log('child_added', snap);
+                var pointTile = self.phaser.add.tileSprite(32 * snap.x, 32 * snap.y, 32, 32, 'tile-ground', 3);
+                Engine.pointGroup.add(pointTile);
+            });
+
+            this.firebasePoints.on('child_changed', function (snapshot) {
+                var snap = snapshot.val();
+                console.log('child_changed', snap);
                 var pointTile = self.phaser.add.tileSprite(32 * snap.x, 32 * snap.y, 32, 32, 'tile-ground', 3);
                 Engine.pointGroup.add(pointTile);
             });
@@ -239,7 +247,7 @@ define([
         },
 
         restorePlayerPositions: function () {
-            var playerSettings = Player.DEFAULT_SETTINGS;
+            var playerSettings = _.clone(Player.DEFAULT_SETTINGS);
 
             playerSettings.id = this.localPlayer.data.id;
             this.firebasePlayers.child(playerSettings.id).update(playerSettings);
