@@ -20,8 +20,12 @@
     });
 
     require([
+        'App',
         'Game'
-    ], function (Game) {
-        root.game = new Game();
+    ], function (App, Game) {
+        App.game = new Game();
+
+        // Exports
+        root.App = App;
     });
 }(this));
