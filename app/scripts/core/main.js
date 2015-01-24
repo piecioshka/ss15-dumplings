@@ -11,7 +11,9 @@
 
         shim: {
             firebase: { exports: 'Firebase' },
-            jquery: { exports: '$' }
+            jquery: { exports: '$' },
+            lodash: { exports: '_' },
+            phaser: { exports: 'Phaser' }
         }
     });
 
