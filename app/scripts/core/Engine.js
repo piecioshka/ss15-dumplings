@@ -1,6 +1,6 @@
 define([
-    'App',
-    'helpers/AssetsLoader'
+    'core/App',
+    'core/helpers/AssetsLoader'
 ], function (App, AssetsLoader) {
     'use strict';
 

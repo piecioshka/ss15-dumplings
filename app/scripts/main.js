@@ -3,11 +3,11 @@
 
     require.config({
         paths: {
-            firebase: '../vendor/firebase',
-            jquery: '../vendor/jquery',
-            lodash: '../vendor/lodash',
-            phaser: '../vendor/phaser',
-            promise: '../vendor/promise'
+            firebase: 'vendor/firebase',
+            jquery: 'vendor/jquery',
+            lodash: 'vendor/lodash',
+            phaser: 'vendor/phaser',
+            promise: 'vendor/promise'
         },
 
         shim: {
@@ -20,8 +20,8 @@
     });
 
     require([
-        'App',
-        'Game'
+        'core/App',
+        'core/Game'
     ], function (App, Game) {
         App.game = new Game();
 

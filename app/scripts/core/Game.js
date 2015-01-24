@@ -4,11 +4,11 @@ define([
     'lodash',
     'phaser',
     'promise',
-    'Utilities',
-    'Engine',
-    'helpers/AssetsLoader',
-    'helpers/Scheduler',
-    'helpers/Storage'
+    'core/Utilities',
+    'core/Engine',
+    'core/helpers/AssetsLoader',
+    'core/helpers/Scheduler',
+    'core/helpers/Storage'
 ], function (Firebase, $, _, Phaser, promise, Utilities, Engine, AssetsLoader, Scheduler, Storage) {
     'use strict';
 
@@ -129,7 +129,7 @@ define([
     Game.WIDTH = 960;
     Game.HEIGHT = 320;
     
-    Game.STORAGE_PLAYER_ID_KEY = 'playerId';
+    Game.STORAGE_PLAYER_ID_KEY = 'ss15-dumplings-player-id';
 
     return Game;
 });
