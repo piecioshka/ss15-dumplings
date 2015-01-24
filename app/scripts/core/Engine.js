@@ -172,11 +172,10 @@ define([
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (playerTile, raftTile) {
                 playerTile.body.immovable = true;
                 raftTile.body.velocity.y = playerTile.body.velocity.y = 0;
-                raftTile.position.y = Math.round(raftTile.position.y);
             }, null, this);
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {
-                console.log('drawing out...');
+                // console.log('drawing out...');
             });
 
             var currentRaftVelocity = Engine.raft.body.velocity.x;
