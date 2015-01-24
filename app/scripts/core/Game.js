@@ -15,6 +15,7 @@ define([
 
     function Game() {
         this.firebase = undefined;
+        this.points = undefined;
         this.phaser = undefined;
 
         // List of players.
@@ -53,7 +54,7 @@ define([
         setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase1');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
             this.points = new Firebase('https://dumplings.firebaseio.com/points');
             this.phaser = new Phaser.Game(Game.WIDTH + 100, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 

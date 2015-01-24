@@ -27,8 +27,8 @@ define([
         },
 
         render: function (Engine) {
-            this._setupRaft(Engine);
             this._setupWater(Engine);
+            this._setupRaft(Engine);
         }
     };
 

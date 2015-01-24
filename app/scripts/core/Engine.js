@@ -95,15 +95,13 @@ define([
 
         _pointsManager: function () {
             var text = '';
-            var style = { font: '18px Arial', fill: '#000', align: 'left' };
+            var style = { font: '11px Tahoma', fill: '#000', align: 'left' };
 
             App.game.players.forEach(function (player) {
                 text += player.getName() + ': ' + player.firebase.points + '\n';
             });
 
-            //console.log(App.game.players);
-
-            App.game.phaser.add.text(960, 0, text, style);
+            // App.game.phaser.add.text(960, 0, text, style);
         },
 
         update: function () {
@@ -147,10 +145,6 @@ define([
             }
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
-                /*if (tileSprite.index === 4) {
-                    Engine.map.removeTile(tileSprite.x, tileSprite.y);
-                }*/
-
                 tileSprite.destroy();
 
                 App.game.updatePoints();
@@ -163,12 +157,7 @@ define([
                 var positionY = tileSprite.y / Engine.tileSize.height;
 
                 Engine.tileList = Engine.tileList.filter(function (tile) {
-                    //console.log(tile, positionX, positionY);
-                    if ((tile.x === positionX) && (tile.y === positionY)) {
-                        return false;
-                    }
-
-                    return true;
+                    return !((tile.x === positionX) && (tile.y === positionY));
                 });
             }, null, this);
 
@@ -181,6 +170,7 @@ define([
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (player, raft) {
                 player.body.immovable = true;
                 raft.body.velocity.y = player.body.velocity.y = 0;
+                raft.position.y = Math.round(raft.position.y);
             }, null, this);
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {

@@ -3,6 +3,6 @@
     float: left;
 }
 .resetPoints {
-    font-weight: bold;
-    font-family: Arial;
+    clear: both;
+    float: left;
 }
