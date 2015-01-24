@@ -1,31 +1,61 @@
-/*global localStorage, console */
-
 define([
     'firebase',
     'jquery',
     'lodash',
     'phaser',
-    'utilities',
-    'engine'
-], function (Firebase, $, _, Phaser, Utilities, Engine) {
+    'promise',
+    'Utilities',
+    'Engine',
+    'helpers/AssetsLoader',
+    'helpers/Scheduler',
+    'helpers/Storage'
+], function (Firebase, $, _, Phaser, promise, Utilities, Engine, AssetsLoader, Scheduler, Storage) {
     'use strict';
 
     function Game() {
         this.players = undefined;
         this.game = undefined;
 
-        this.initialize();
+        this.setupManager = new Scheduler();
+        this.setupManager.addTask(this.loadAssets);
+        this.setupManager.addTask(this.initialize.bind(this));
+
+        this.setupManager.resolveAllTasks(function () {
+            console.info('Game loaded!');
+        });
     }
 
     Game.prototype = {
+        loadAssets: function () {
+            var p = new promise.Promise();
+
+            var images = [
+                'assets/images/monkey.png'
+            ];
+
+            AssetsLoader.loadImages(images, function () {
+                p.done();
+            });
+
+            return p;
+        },
+
         initialize: function () {
-            var self = this;
+            var p = new promise.Promise();
 
             this.players = new Firebase('https://dumplings.firebaseio.com/players');
             // this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'game', Engine);
 
+            this.bindHandlers();
             this.setupPlayerID();
 
+            p.done();
+
+            return p;
+        },
+
+        bindHandlers: function () {
+            var self = this;
             var currentPlayerID = this.getPlayerID();
 
             var localPlayer = {
@@ -73,6 +103,7 @@ define([
                 var snap = snapshot.val();
                 $("#" + snap.id).remove();
             });
+
         },
 
         updatePlayer: function (playerID, localPlayer) {
@@ -82,20 +113,22 @@ define([
         setupPlayerID: function () {
             var playerID;
 
-            if (localStorage.getItem('playerId') === null) {
+            if (Storage.get(Game.STORAGE_PLAYER_ID_KEY) === null) {
                 playerID = Utilities.guid();
-                localStorage.setItem('playerId', playerID);
-                console.log('Hello new Player (ID: %s)', playerID);
+                Storage.put(Game.STORAGE_PLAYER_ID_KEY, playerID);
+                console.warn('Hello new Player (ID: %s)', playerID);
             }
         },
 
         getPlayerID: function () {
-            return localStorage.getItem('playerId');
+            return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
         }
     };
-
+    
     Game.WIDTH = 1400;
     Game.HEIGHT = 500;
+    
+    Game.STORAGE_PLAYER_ID_KEY = 'playerId';
 
     return Game;
 });

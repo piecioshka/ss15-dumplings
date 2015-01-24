@@ -6,20 +6,22 @@
             firebase: '../vendor/firebase',
             jquery: '../vendor/jquery',
             lodash: '../vendor/lodash',
-            phaser: '../vendor/phaser'
+            phaser: '../vendor/phaser',
+            promise: '../vendor/promise'
         },
 
         shim: {
             firebase: { exports: 'Firebase' },
             jquery: { exports: '$' },
             lodash: { exports: '_' },
-            phaser: { exports: 'Phaser' }
+            phaser: { exports: 'Phaser' },
+            promise: { exports: 'promise' }
         }
     });
 
     require([
-        'game'
+        'Game'
     ], function (Game) {
-        new Game();
+        root.game = new Game();
     });
 }(this));

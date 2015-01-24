@@ -5,19 +5,15 @@ define([
 
     var Engine = {
         preload: function () {
-
         },
 
         create: function () {
-
         },
 
         update: function () {
-
         },
 
         render: function () {
-
         }
     };
 
