@@ -1,0 +1,6 @@
+{
+  "name": "ss15-dumplings",
+  "root": "./",
+  "clean_urls": true,
+  "error_page": "error.html"
+}
