@@ -62,12 +62,14 @@ define([
             Engine.waterGroup = App.game.phaser.add.group();
             Engine.waterGroup.name = 'water';
             Engine.waterGroup.enableBody = true;
+            Engine.waterGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
             _.times(7, function (index) {
                 var waterTile = App.game.phaser.add.tileSprite(32 * (index + 6), 32 * 9, 32, 32, 'tile-ground', 2);
                 waterTile.name = 'drop';
                 Engine.waterGroup.add(waterTile);
                 waterTile.body.immovable = true;
+                waterTile.body.setSize(32, 22, 0, 10);
             });
         },
 
@@ -186,9 +188,9 @@ define([
                 }
             }, null, this);
 
-            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (tileSprite, sprite) {
-                // console.log('tileSprite', tileSprite); // tile-ground
-                // console.log('sprite', sprite); // tile-monkey
+            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (player, raft) {
+                player.body.immovable = true;
+                raft.body.velocity.y = player.body.velocity.y = 0;
             }, null, this);
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {
