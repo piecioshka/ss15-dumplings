@@ -199,7 +199,7 @@ define([
             }, null, this);
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {
-                console.log('topisz się...');
+                console.log('drawing out...');
             });
 
             var currentRaftVelocity = Engine.raft.body.velocity.x;

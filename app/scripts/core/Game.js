@@ -55,7 +55,7 @@ define([
 
             this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
             this.points = new Firebase('https://dumplings.firebaseio.com/points');
-            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
+            this.phaser = new Phaser.Game(Game.WIDTH + 100, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
             return p;

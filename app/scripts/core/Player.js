@@ -8,7 +8,8 @@ define([
         this.firebase = {
             id: undefined,
             x: 10,
-            y: 10
+            y: 10,
+            points: 0
         };
         this.label = undefined;
     };
