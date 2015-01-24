@@ -34,7 +34,6 @@ define([
         },
 
         _setupRaft: function () {
-            console.log(App.game.phaser.add);
             Engine.raft = App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 4);
             App.game.phaser.physics.enable(Engine.raft, Phaser.Physics.ARCADE);
             Engine.raft.body.velocity.x = 120;
@@ -80,6 +79,10 @@ define([
                 if (tile.index === 1) {
                     Engine.raft.body.velocity.x = (currentRaftVelocity > 0) ? -120 : 120;
                 }
+            }, null, this);
+
+            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tileSprite) {
+                //console.log(Engine.raft);
             }, null, this);
 
             // How much different between localPlayer and ground.
