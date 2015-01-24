@@ -67,8 +67,8 @@ define([
         setupFirebase: function () {
             var p = new promise.Promise();
 
-            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players-1');
-            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points-1');
+            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players');
+            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points');
             this.firebaseRafts = new Firebase('https://dumplings.firebaseio.com/firebase-rafts');
 
             // console.log('Game#setupFirebase');
@@ -261,9 +261,9 @@ define([
         },
 
         restore: function () {
-            this.restorePlayerPositions();
             this.pointList = Engine.defaultPointList;
             this.updatePoints(this.pointList);
+            this.restorePlayerPositions();
         }
     };
     
