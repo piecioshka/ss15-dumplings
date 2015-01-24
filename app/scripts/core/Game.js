@@ -6,19 +6,28 @@ define([
     'promise',
     'core/Utilities',
     'core/Engine',
+    'core/Player',
     'core/helpers/AssetsLoader',
     'core/helpers/Scheduler',
     'core/helpers/Storage'
-], function (Firebase, $, _, Phaser, promise, Utilities, Engine, AssetsLoader, Scheduler, Storage) {
+], function (Firebase, $, _, Phaser, promise, Utilities, Engine, Player, AssetsLoader, Scheduler, Storage) {
     'use strict';
 
     function Game() {
-        this.players = undefined;
+        this.firebase = undefined;
         this.phaser = undefined;
+
+        // List of players.
+        this.players = [];
+        this.localPlayer = undefined;
+
+        _.bindAll(this, 'setupCommunication', 'setupHandlers');
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
-        this.setupManager.addTask(this.initialize.bind(this));
+        this.setupManager.addTask(this.setupLocalPlayerID);
+        this.setupManager.addTask(this.setupCommunication);
+        this.setupManager.addTask(this.setupHandlers);
 
         this.setupManager.resolveAllTasks(function () {
             console.info('Game loaded!');
@@ -41,77 +50,18 @@ define([
             return p;
         },
 
-        initialize: function () {
+        setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.players = new Firebase('https://dumplings.firebaseio.com/players');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
             this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
-            this.setupPlayerID();
-            this.bindHandlers();
-
             p.done();
-
             return p;
         },
 
-        bindHandlers: function () {
-            var self = this;
-            var currentPlayerID = this.getPlayerID();
-
-            var localPlayer = {
-                id: currentPlayerID,
-                x: 10,
-                y: 10
-            };
-
-            this.players.child(currentPlayerID).once('value', function (snapshot) {
-                if (snapshot.val() !== null) {
-                    localPlayer = snapshot.val();
-                } else {
-                    self.players.child(currentPlayerID).set(localPlayer);
-                }
-            });
-
-            $('body').keydown(function (key) {
-                if (key.keyCode == 38) { // top
-                    localPlayer.y = localPlayer.y - 10;
-                } else if (key.keyCode == 37) { // left
-                    localPlayer.x = localPlayer.x - 10;
-                } else if (key.keyCode == 39) { // right
-                    localPlayer.x = localPlayer.x + 10;
-                } else if (key.keyCode == 40) { // down
-                    localPlayer.y = localPlayer.y + 10;
-                }
-
-                if (_.contains([37, 38, 39, 40], key.keyCode)) {
-                    self.updatePlayer(currentPlayerID, localPlayer);
-                }
-            });
-
-            this.players.on('child_added', function (snapshot) {
-                var snap = snapshot.val();
-                var $player = $("<player id='" + snap.id + "' style='top:" + snap.y + "px; left:" + snap.x + "px;'>");
-                $("playground").append($player);
-            });
-
-            this.players.on('child_changed', function (snapshot) {
-                var snap = snapshot.val();
-                $("#" + snap.id).animate({ top: snap.y, left: snap.x }, 0);
-            });
-
-            this.players.on('child_removed', function (snapshot) {
-                var snap = snapshot.val();
-                $("#" + snap.id).remove();
-            });
-
-        },
-
-        updatePlayer: function (playerID, localPlayer) {
-            this.players.child(playerID).update(localPlayer);
-        },
-
-        setupPlayerID: function () {
+        setupLocalPlayerID: function () {
+            var p = new promise.Promise();
             var playerID;
 
             if (Storage.get(Game.STORAGE_PLAYER_ID_KEY) === null) {
@@ -119,9 +69,96 @@ define([
                 Storage.put(Game.STORAGE_PLAYER_ID_KEY, playerID);
                 console.warn('Hello new Player (ID: %s)', playerID);
             }
+
+            p.done();
+            return p;
         },
 
-        getPlayerID: function () {
+        setupHandlers: function () {
+            var p = new promise.Promise();
+            var self = this;
+            var currentPlayerID = this.getLocalPlayerID();
+
+            this.firebase.child(currentPlayerID).once('value', function (snapshot) {
+                var snap = snapshot.val();
+
+                if (snap !== null) {
+                    self.createLocalPlayer();
+                    self.localPlayer.firebase = snap;
+                } else {
+                    self.localPlayer.firebase.id = currentPlayerID;
+                    self.firebase.child(currentPlayerID).set(self.localPlayer.firebase);
+                }
+            });
+
+            this.firebase.on('child_added', function (snapshot) {
+                var snap = snapshot.val();
+                console.info('child_added', snap);
+                self.createPlayer(snap);
+            });
+
+            this.firebase.on('child_changed', function (snapshot) {
+                var snap = snapshot.val();
+                console.info('child_changed', snap);
+                self.updatePlayerPosition(snap);
+            });
+
+            this.firebase.on('child_removed', function (snapshot) {
+                var snap = snapshot.val();
+                console.info('child_removed', snap);
+                self.removePlayerById(snap.id);
+            });
+
+            p.done();
+            return p;
+        },
+
+        createPlayer: function (params) {
+            console.log('Game#createPlayer', params);
+            var player = new Player();
+            this._createPhaserPlayer(player);
+            this.players.push(player);
+        },
+
+        _createPhaserPlayer: function (player) {
+            console.log('Game#_createPhaserPlayer', player);
+            player.phaser = this.phaser.add.sprite(0, 10, 'tile-monkey');
+            this.phaser.physics.enable(player.phaser, Phaser.Physics.ARCADE);
+
+            player.phaser.body.bounce.y = 0.1;
+            player.phaser.body.collideWorldBounds = true;
+            player.phaser.body.setSize(30, 30, 1, 1);
+
+            player.label = this.phaser.add.text(0, 0, this.getLocalPlayerID().substr(0, 5), {
+                font: "11px Arial",
+                fill: "#000",
+                align: "center"
+            });
+        },
+
+        createLocalPlayer: function () {
+            console.log('Game#createLocalPlayer');
+            this.localPlayer = new Player();
+            this._createPhaserPlayer(this.localPlayer);
+
+            // Stay camera on localPlayer.
+            this.phaser.camera.follow(this.localPlayer.phaser);
+        },
+
+        removePlayerById: function (playerID) {
+            console.log('Game#removePlayerById', playerID);
+        },
+
+        updatePlayerPosition: function (params) {
+            console.log('Game#updatePlayerPosition', params);
+        },
+
+        updatePlayer: function (playerID, player) {
+            // console.log('Game#updatePlayer', playerID, player);
+            this.firebase.child(playerID).update(player);
+        },
+
+        getLocalPlayerID: function () {
             return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
         }
     };
