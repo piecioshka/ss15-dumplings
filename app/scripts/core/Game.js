@@ -67,8 +67,8 @@ define([
         setupFirebase: function () {
             var p = new promise.Promise();
 
-            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players');
-            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points');
+            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players-1');
+            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points-1');
             this.firebaseRafts = new Firebase('https://dumplings.firebaseio.com/firebase-rafts');
 
             console.log('Game#setupFirebase');
@@ -113,10 +113,10 @@ define([
             this.firebasePlayers.child(currentPlayerID).once('value', function (snapshot) {
                 var snap = snapshot.val();
 
-                if (snap !== null) {
-                    self.localPlayer.data = snap;
-                } else {
+                if (snap === null) {
                     self.firebasePlayers.child(currentPlayerID).set(self.localPlayer.data);
+                } else {
+                    self.localPlayer.data = snap;
                 }
             });
 
@@ -153,13 +153,14 @@ define([
                 var snap = snapshot.val();
 
                 if (snap === null) {
-                    self.restorePoints();
+                    self.updatePoints(Engine.defaultPointList);
                 } else {
                     self.pointList = snap;
                 }
 
                 _.each(self.pointList, function (tile) {
-                    Engine.pointGroup.add(this.phaser.add.tileSprite((Engine.tileSize.width * tile.x), (Engine.tileSize.height * tile.y), Engine.tileSize.width, Engine.tileSize.height, 'tile-ground', 3));
+                    var pointTile = this.phaser.add.tileSprite(32 * tile.x, 32 * tile.y, 32, 32, 'tile-ground', 3);
+                    Engine.pointGroup.add(pointTile);
                 }, self);
             });
 
@@ -238,8 +239,9 @@ define([
             this.firebasePlayers.child(player.data.id).update(player.data);
         },
 
-        updatePoints: function () {
-            this.firebasePoints.set(this.pointList);
+        updatePoints: function (points) {
+            console.log('Game#updatePoints', points);
+            this.firebasePoints.set(points);
         },
 
         getLocalPlayerID: function () {
@@ -258,13 +260,10 @@ define([
             }, this);
         },
 
-        restorePoints: function () {
-            this.firebasePoints.set(Engine.defaultPointList);
-        },
-
         restore: function () {
             this.restorePlayerPositions();
-            this.restorePoints();
+            this.pointList = Engine.defaultPointList;
+            this.updatePoints(this.pointList);
         }
     };
     
