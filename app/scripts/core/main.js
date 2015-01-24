@@ -4,8 +4,8 @@
     require.config({
         paths: {
             firebase: '../vendor/firebase',
-            jquery: '../vendor/jquery.min',
-            lodash: '../vendor/lodash.min',
+            jquery: '../vendor/jquery',
+            lodash: '../vendor/lodash',
             phaser: '../vendor/phaser'
         },
 
