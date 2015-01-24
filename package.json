@@ -24,6 +24,7 @@
     "gulp": "latest",
     "gulp-util": "latest",
     "gulp-help": "latest",
+    "gulp-shell": "latest",
     "requirejs": "latest",
     "del": "latest",
     "q": "latest"

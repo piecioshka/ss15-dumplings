@@ -58,8 +58,8 @@ define([
         setupFirebase: function () {
             var p = new promise.Promise();
 
-            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebasePlayers');
-            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/points');
+            this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players');
+            this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points');
 
             console.log('Game#setupFirebase');
             p.done();

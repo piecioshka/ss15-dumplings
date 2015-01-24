@@ -1,10 +1,11 @@
 (function () {
     'use strict';
 
-    var rjs = require('requirejs');
     var gulp = require('gulp');
-    var del = require('del');
     var util = require('gulp-util');
+    var shell = require('gulp-shell');
+    var rjs = require('requirejs');
+    var del = require('del');
     var Q = require('q');
 
     // Legend for tasks.
@@ -36,6 +37,10 @@
     gulp.task('build', 'Building application', ['optimize', 'clean-dist'], function () {
         util.log(util.colors.yellow('Finished building.'));
     });
+
+    gulp.task('count', 'Count LOC of each *.js file in `app/scripts/core`.', shell.task([
+        'find app/scripts/core -name "*.js" | xargs wc -l | sort -r'
+    ]));
 
     module.exports = gulp;
 }());
