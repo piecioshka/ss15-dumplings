@@ -160,7 +160,7 @@ define([
                 return;
             }
 
-            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
+            App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
                 /*if (tileSprite.index === 4) {
                     Engine.map.removeTile(tileSprite.x, tileSprite.y);
                 }*/
