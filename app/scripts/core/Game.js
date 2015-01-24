@@ -124,7 +124,7 @@ define([
             console.log('Game#createPlayer', params);
             var player = new Player();
             player.firebase = params;
-            console.warn('Hello Player (ID: %s)', player.firebase.id);
+            // console.warn('Hello Player (ID: %s)', player.firebase.id);
 
             this._createPhaserPlayer(player);
             this.players.push(player);
@@ -149,7 +149,7 @@ define([
         },
 
         removePlayerById: function (playerID) {
-            console.log('Game#removePlayerById', playerID);
+            // console.log('Game#removePlayerById', playerID);
             if (this.localPlayer.firebase.id === playerID) {
                 this.localPlayer.phaser.destroy();
                 this.localPlayer.label.destroy();
@@ -170,8 +170,8 @@ define([
             // console.log('Game#updatePlayerPosition', params);
             _.each(this.players, function (player) {
                 if (player.firebase.id === params.id) {
-                    player.phaser.x = player.x;
-                    player.phaser.y = player.y;
+                    player.phaser.x = params.x;
+                    player.phaser.y = params.y;
                 }
             }, this);
         },
