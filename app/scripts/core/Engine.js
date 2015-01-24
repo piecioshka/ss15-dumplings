@@ -10,7 +10,9 @@ define([
         map: undefined,
         raft: undefined,
         world: undefined,
-        group: undefined,
+
+        playerGroup: undefined,
+        pointGroup: undefined,
 
         jumpTimer: 0,
         jumpButton: undefined,
@@ -57,12 +59,19 @@ define([
 
             Engine._setupRaft();
 
-            Engine.group = App.game.phaser.add.group();
-            Engine.group.enableBody = true;
-            Engine.group.physicsBodyType = Phaser.Physics.ARCADE;
+            Engine.playerGroup = App.game.phaser.add.group();
+            Engine.playerGroup.enableBody = true;
+            Engine.playerGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
+            Engine.pointGroup = App.game.phaser.add.group();
+            Engine.pointGroup.enableBody = true;
+            Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
+            Engine.pointGroup.add(App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 3));
+
 
             // Add local player as first player to group.
-            Engine.group.add(App.game.localPlayer.phaser);
+            Engine.playerGroup.add(App.game.localPlayer.phaser);
         },
 
         update: function () {
@@ -103,14 +112,21 @@ define([
                 return;
             }
 
-            App.game.phaser.physics.arcade.collide(Engine.group, Engine.world, function (sprite, tile) {
+            /*App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
+                if (tileSprite.index === 4) {
+                    Engine.map.removeTile(tileSprite.x, tileSprite.y);
+                }
+                console.log(arguments);
+            }, null, this);*/
+
+            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
                     Engine.map.removeTile(tile.x, tile.y);
                 }
             }, null, this);
 
-            App.game.phaser.physics.arcade.collide(Engine.group, Engine.raft, function (sprite, tile) {
-                console.log('Raft touch!');
+            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (tileSprite, sprite) {
+                console.log(arguments);
             }, null, this);
 
             var currentRaftVelocity = Engine.raft.body.velocity.x;
