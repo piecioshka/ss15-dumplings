@@ -29,13 +29,17 @@ define([
         // List of points.
         this.pointList = [];
 
+        var allMethods = _.functions(this);
+        allMethods.unshift(this);
+        _.bindAll.apply(_, allMethods);
+
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
-        this.setupManager.addTask(this.setupFirebase.bind(this));
-        this.setupManager.addTask(this.setupPhaser.bind(this));
-        this.setupManager.addTask(this.setupLocalPlayer.bind(this));
-        this.setupManager.addTask(this.setupFirebasePlayersEvents.bind(this));
-        this.setupManager.addTask(this.setupFirebasePointsEvents.bind(this));
+        this.setupManager.addTask(this.setupFirebase);
+        this.setupManager.addTask(this.setupPhaser);
+        this.setupManager.addTask(this.setupLocalPlayer);
+        this.setupManager.addTask(this.setupFirebasePlayersEvents);
+        this.setupManager.addTask(this.setupFirebasePointsEvents);
 
         this.setupManager.resolveAllTasks(function () {
             new PointsManager();
@@ -146,11 +150,12 @@ define([
             var self = this;
 
             this.firebasePoints.on('value', function (snapshot) {
-                self.pointList = snapshot.val();
-                // Add points.
+                var snap = snapshot.val();
 
-                if (!self.pointList) {
-                    return;
+                if (snap === null) {
+                    self.restorePoints();
+                } else {
+                    self.pointList = snap;
                 }
 
                 _.each(self.pointList, function (tile) {
@@ -241,7 +246,7 @@ define([
             return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
         },
 
-        restore: function () {
+        restorePlayerPositions: function () {
             var playerSettings = Player.DEFAULT_SETTINGS;
 
             playerSettings.id = this.localPlayer.data.id;
@@ -251,8 +256,15 @@ define([
                 playerSettings.id = player.data.id;
                 this.firebasePlayers.child(playerSettings.id).update(playerSettings);
             }, this);
+        },
 
+        restorePoints: function () {
             this.firebasePoints.set(Engine.defaultPointList);
+        },
+
+        restore: function () {
+            this.restorePlayerPositions();
+            this.restorePoints();
         }
     };
     
