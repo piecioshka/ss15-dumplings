@@ -20,18 +20,22 @@ define([
         this.firebaseRafts = undefined;
         this.phaser = undefined;
 
-        // List of players.
-        this.players = [];
+        // Player from current browser.
         this.localPlayer = undefined;
 
-        _.bindAll(this, 'setupLocalPlayer', 'setupFirebase', 'setupPhaser', 'setupHandlers', 'restore');
+        // List of players.
+        this.players = [];
+
+        // List of points.
+        this.pointList = [];
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
-        this.setupManager.addTask(this.setupFirebase);
-        this.setupManager.addTask(this.setupPhaser);
-        this.setupManager.addTask(this.setupLocalPlayer);
-        this.setupManager.addTask(this.setupHandlers);
+        this.setupManager.addTask(this.setupFirebase.bind(this));
+        this.setupManager.addTask(this.setupPhaser.bind(this));
+        this.setupManager.addTask(this.setupLocalPlayer.bind(this));
+        this.setupManager.addTask(this.setupFirebasePlayersEvents.bind(this));
+        this.setupManager.addTask(this.setupFirebasePointsEvents.bind(this));
 
         this.setupManager.resolveAllTasks(function () {
             new PointsManager();
@@ -97,7 +101,7 @@ define([
             return p;
         },
 
-        setupHandlers: function () {
+        setupFirebasePlayersEvents: function () {
             var p = new promise.Promise();
             var self = this;
             var currentPlayerID = this.getLocalPlayerID();
@@ -132,7 +136,26 @@ define([
                 self.removePlayerById(snap.id);
             });
 
-            console.log('Game#setupHandlers');
+            console.log('Game#setupFirebasePlayersEvents');
+            p.done();
+            return p;
+        },
+
+        setupFirebasePointsEvents: function () {
+            var p = new promise.Promise();
+            var self = this;
+            this.firebasePoints.on('value', function (snapshot) {
+                self.pointList = snapshot.val();
+                // Add points.
+
+                if (!self.pointList) {
+                    return;
+                }
+
+                _.each(self.pointList, function (tile) {
+                    Engine.pointGroup.add(this.phaser.add.tileSprite((Engine.tileSize.width * tile.x), (Engine.tileSize.height * tile.y), Engine.tileSize.width, Engine.tileSize.height, 'tile-ground', 3));
+                }, this);
+            });
             p.done();
             return p;
         },
@@ -208,7 +231,7 @@ define([
         },
 
         updatePoints: function () {
-            this.firebasePoints.set(Engine.tileList);
+            this.firebasePoints.set(this.pointList);
         },
 
         getLocalPlayerID: function () {

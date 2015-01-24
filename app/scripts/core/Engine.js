@@ -1,10 +1,11 @@
 define([
+    'lodash',
     'phaser',
     'core/App',
     'core/helpers/AssetsLoader',
     'core/maps/Map1',
     'core/maps/Map2'
-], function (Phaser, App, AssetsLoader, Map1, Map2) {
+], function (_, Phaser, App, AssetsLoader, Map1, Map2) {
     'use strict';
 
     var Engine = {
@@ -24,8 +25,6 @@ define([
             width: 32,
             height: 32
         },
-
-        tileList: [],
 
         defaultPointList: [
             { x: 4, y: 1 },
@@ -72,21 +71,6 @@ define([
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
         },
 
-        _setupPoints: function () {
-            App.game.firebasePoints.on('value', function (snapshot) {
-                Engine.tileList = snapshot.val();
-                // Add points.
-
-                if (!Engine.tileList) {
-                    return;
-                }
-
-                Engine.tileList.forEach(function (tile) {
-                    Engine.pointGroup.add(App.game.phaser.add.tileSprite((Engine.tileSize.width * tile.x), (Engine.tileSize.height * tile.y), Engine.tileSize.width, Engine.tileSize.height, 'tile-ground', 3));
-                });
-            });
-        },
-
         create: function () {
             // console.warn('Engine#create');
             App.game.phaser.physics.startSystem(Phaser.Physics.ARCADE);
@@ -94,9 +78,8 @@ define([
 
             Engine._setupMap();
             Engine._setupWorld();
-            Engine._setupPoints();
 
-            document.querySelector('.reset').addEventListener('click', App.game.restore);
+            document.querySelector('.reset').addEventListener('click', _.bind(App.game.restore, this));
 
             App.game._createPhaserPlayer(App.game.localPlayer);
             App.game.phaser.camera.follow(App.game.localPlayer.phaser);
@@ -157,14 +140,14 @@ define([
 
                 App.game.updatePoints();
 
-                if (!Engine.tileList) {
+                if (!App.game.pointList) {
                     return;
                 }
 
                 var positionX = pointTile.x / Engine.tileSize.width;
                 var positionY = pointTile.y / Engine.tileSize.height;
 
-                Engine.tileList = Engine.tileList.filter(function (tile) {
+                App.game.pointList = _.filter(App.game.pointList, function (tile) {
                     return !((tile.x === positionX) && (tile.y === positionY));
                 });
             }, null, this);
