@@ -1,8 +1,10 @@
 define([
     'phaser',
     'core/App',
-    'core/helpers/AssetsLoader'
-], function (Phaser, App, AssetsLoader) {
+    'core/helpers/AssetsLoader',
+    'core/maps/Map1',
+    'core/maps/Map2'
+], function (Phaser, App, AssetsLoader, Map1, Map2) {
     'use strict';
 
     var Engine = {
@@ -34,11 +36,12 @@ define([
             // console.warn('Engine#preload');
             App.game.phaser.load.spritesheet('tile-ground', AssetsLoader.IMAGES.GROUND, 32, 32);
             App.game.phaser.load.image('tile-monkey', AssetsLoader.IMAGES.MONKEY);
-            App.game.phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
+            // App.game.phaser.load.tilemap('map', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
+            App.game.phaser.load.tilemap('map', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
         },
 
         _setupMap: function () {
-            Engine.map = App.game.phaser.add.tilemap('map-1');
+            Engine.map = App.game.phaser.add.tilemap('map');
             Engine.map.name = 'map';
             Engine.map.addTilesetImage('tile-ground');
 
@@ -49,28 +52,6 @@ define([
         _setupWorld: function () {
             Engine.world = Engine.map.createLayer('Tile Layer 1');
             Engine.world.resizeWorld();
-        },
-
-        _setupRaft: function () {
-            Engine.raft = App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 4);
-            Engine.raft.name = 'raft';
-            App.game.phaser.physics.enable(Engine.raft, Phaser.Physics.ARCADE);
-            Engine.raft.body.velocity.x = 120;
-        },
-
-        _setupWater: function () {
-            Engine.waterGroup = App.game.phaser.add.group();
-            Engine.waterGroup.name = 'water';
-            Engine.waterGroup.enableBody = true;
-            Engine.waterGroup.physicsBodyType = Phaser.Physics.ARCADE;
-
-            _.times(7, function (index) {
-                var waterTile = App.game.phaser.add.tileSprite(32 * (index + 6), 32 * 9, 32, 32, 'tile-ground', 2);
-                waterTile.name = 'drop';
-                Engine.waterGroup.add(waterTile);
-                waterTile.body.immovable = true;
-                waterTile.body.setSize(32, 22, 0, 10);
-            });
         },
 
         _setupPlayerGroup: function () {
@@ -116,8 +97,8 @@ define([
             Engine.cursors = App.game.phaser.input.keyboard.createCursorKeys();
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-            Engine._setupWater();
-            Engine._setupRaft();
+            // Map1.render(Engine);
+            Map2.render(Engine);
             Engine._setupPlayerGroup();
             Engine._setupPointGroup();
         },
