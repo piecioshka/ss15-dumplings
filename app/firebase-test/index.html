@@ -56,7 +56,7 @@
     currentPlayerId = localStorage.getItem('playerId');
 
     //Create a reference to the pixel data for our drawing.
-    var players = new Firebase('https://dumplings.firebaseio.com/players');
+    var players = new Firebase('https://dumplings.firebaseio.com/test/players');
 
     localPlayer = {
       id : currentPlayerId,
@@ -111,7 +111,7 @@
       $("#"+snap.id).delete();
     });
 
-    map = new Firebase('https://dumplings.firebaseio.com/map');
+    map = new Firebase('https://dumplings.firebaseio.com/test/map');
 
     map.on('child_added',   function(e) {
       console.log('child_added',e.key(),e.val());
@@ -134,7 +134,7 @@
       $("map#"+e.key()).remove();
     });
 
-    state = new Firebase('https://dumplings.firebaseio.com/state/timer');
+    state = new Firebase('https://dumplings.firebaseio.com/test/state/timer');
 
     state.on('value',   function(e) {
       $("#timer").html("Time to end this round: "+e.val()+"sec.");
