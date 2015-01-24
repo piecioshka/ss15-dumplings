@@ -67,7 +67,28 @@ define([
             Engine.pointGroup.enableBody = true;
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-            Engine.pointGroup.add(App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 3));
+            var tileSize = {
+                width: 32,
+                height: 32
+            };
+
+            var tileList = [
+                { x: 4, y: 1 },
+                { x: 8, y: 4 },
+                { x: 19, y: 0 },
+                { x: 15, y: 3 }
+            ];
+
+            tileList.forEach(function (tile) {
+                Engine.pointGroup.add(App.game.phaser.add.tileSprite(
+                    (tileSize.width * tile.x),
+                    (tileSize.height * tile.y),
+                    tileSize.width,
+                    tileSize.height,
+                    'tile-ground',
+                    3
+                ));
+            });
 
 
             // Add local player as first player to group.
@@ -112,12 +133,12 @@ define([
                 return;
             }
 
-            /*App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
-                if (tileSprite.index === 4) {
+            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
+                /*if (tileSprite.index === 4) {
                     Engine.map.removeTile(tileSprite.x, tileSprite.y);
-                }
-                console.log(arguments);
-            }, null, this);*/
+                }*/
+                tileSprite.destroy();
+            }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
