@@ -14,7 +14,7 @@ define([
 
     function Game() {
         this.players = undefined;
-        this.game = undefined;
+        this.phaser = undefined;
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
@@ -30,7 +30,8 @@ define([
             var p = new promise.Promise();
 
             var images = [
-                'assets/images/monkey.png'
+                AssetsLoader.IMAGES.MONKEY,
+                AssetsLoader.IMAGES.GROUND
             ];
 
             AssetsLoader.loadImages(images, function () {
@@ -44,10 +45,10 @@ define([
             var p = new promise.Promise();
 
             this.players = new Firebase('https://dumplings.firebaseio.com/players');
-            // this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'game', Engine);
+            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
-            this.bindHandlers();
             this.setupPlayerID();
+            this.bindHandlers();
 
             p.done();
 
@@ -125,8 +126,8 @@ define([
         }
     };
     
-    Game.WIDTH = 1400;
-    Game.HEIGHT = 500;
+    Game.WIDTH = 960;
+    Game.HEIGHT = 320;
     
     Game.STORAGE_PLAYER_ID_KEY = 'playerId';
 
