@@ -18,6 +18,18 @@ define([
         jumpTimer: 0,
         jumpButton: undefined,
 
+        tileSize: {
+            width: 32,
+            height: 32
+        },
+
+        tileList: [
+            { x: 4, y: 1 },
+            { x: 8, y: 4 },
+            { x: 19, y: 0 },
+            { x: 15, y: 3 }
+        ],
+
         preload: function () {
             // console.warn('Engine#preload');
             App.game.phaser.load.spritesheet('tile-ground', AssetsLoader.IMAGES.GROUND, 32, 32);
@@ -75,25 +87,13 @@ define([
             Engine.pointGroup.enableBody = true;
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-            var tileSize = {
-                width: 32,
-                height: 32
-            };
-
-            var tileList = [
-                { x: 4, y: 1 },
-                { x: 8, y: 4 },
-                { x: 19, y: 0 },
-                { x: 15, y: 3 }
-            ];
-
             // Add points.
-            tileList.forEach(function (tile) {
+            Engine.tileList.forEach(function (tile) {
                 Engine.pointGroup.add(App.game.phaser.add.tileSprite(
-                    (tileSize.width * tile.x),
-                    (tileSize.height * tile.y),
-                    tileSize.width,
-                    tileSize.height,
+                    (Engine.tileSize.width * tile.x),
+                    (Engine.tileSize.height * tile.y),
+                    Engine.tileSize.width,
+                    Engine.tileSize.height,
                     'tile-ground',
                     3
                 ));
@@ -147,6 +147,7 @@ define([
 
             if (localPlayer.firebase.id) {
                 App.game.updatePlayer(localPlayer);
+                App.game.getPoints();
             }
         },
 
@@ -162,7 +163,21 @@ define([
                 /*if (tileSprite.index === 4) {
                     Engine.map.removeTile(tileSprite.x, tileSprite.y);
                 }*/
+                var positionX = tileSprite.x / Engine.tileSize.width;
+                var positionY = tileSprite.y / Engine.tileSize.height;
+
+                Engine.tileList = Engine.tileList.filter(function (tile) {
+                    //console.log(tile, positionX, positionY);
+                    if ((tile.x === positionX) && (tile.y === positionY)) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
                 tileSprite.destroy();
+
+                App.game.updatePoints();
             }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {

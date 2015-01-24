@@ -54,6 +54,7 @@ define([
             var p = new promise.Promise();
 
             this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
+            this.points = new Firebase('https://dumplings.firebaseio.com/points');
             this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
@@ -180,6 +181,16 @@ define([
 
             // console.log('Game#updatePlayer', player);
             this.firebase.child(player.firebase.id).update(player.firebase);
+        },
+
+        getPoints: function () {
+            this.points.on('value', function (snapshot) {
+                Engine.tileList = snapshot.val();
+            });
+        },
+
+        updatePoints: function () {
+            this.points.set(Engine.tileList);
         },
 
         getLocalPlayerID: function () {
