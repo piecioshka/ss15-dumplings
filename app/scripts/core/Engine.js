@@ -69,9 +69,8 @@ define([
             // console.warn('Engine#update');
             var localPlayer = App.game.localPlayer;
 
-            if (!localPlayer) {
-                console.log('localPlayer', localPlayer);
-                return false;
+            if (!localPlayer.phaser.alive) {
+                return;
             }
 
             // Enable collisions
@@ -106,7 +105,7 @@ define([
             }
 
             if (localPlayer.firebase.id) {
-                App.game.updatePlayer(localPlayer.firebase.id, localPlayer.firebase);
+                App.game.updatePlayer(localPlayer);
             }
 
             localPlayer.label.x = localPlayer.phaser.x;

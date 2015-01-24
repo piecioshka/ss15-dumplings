@@ -63,7 +63,7 @@ define([
             this.localPlayer = new Player();
             this.localPlayer.firebase.id = playerID;
 
-            console.warn('Hello Local Player (ID: %s)', playerID);
+            // console.warn('Hello Local Player (ID: %s)', playerID);
 
             p.done();
             return p;
@@ -87,6 +87,8 @@ define([
             this.firebase.child(currentPlayerID).once('value', function (snapshot) {
                 var snap = snapshot.val();
 
+                console.log('snap', snap);
+
                 if (snap !== null) {
                     self.localPlayer.firebase = snap;
                 } else {
@@ -96,8 +98,10 @@ define([
 
             this.firebase.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
-                console.info('child_added', snap);
-                self.createPlayer(snap);
+                if (snap.id !== self.localPlayer.firebase.id) {
+                    console.info('child_added', snap);
+                    self.createPlayer(snap);
+                }
             });
 
             this.firebase.on('child_changed', function (snapshot) {
@@ -145,15 +149,30 @@ define([
 
         removePlayerById: function (playerID) {
             console.log('Game#removePlayerById', playerID);
+            if (this.localPlayer.firebase.id === playerID) {
+                this.localPlayer.phaser.destroy();
+                this.localPlayer.label.destroy();
+            } else {
+                _.each(this.players, function (player, index) {
+                    if (player.firebase.id === playerID) {
+                        player.phaser.destroy();
+                        player.label.destroy();
+
+                        // Remove from list of players.
+                        this.players.splice(index, 1);
+                    }
+                }, this);
+            }
         },
 
         updatePlayerPosition: function (params) {
             console.log('Game#updatePlayerPosition', params);
+            console.log('-------------------------------')
         },
 
-        updatePlayer: function (playerID, player) {
-            // console.log('Game#updatePlayer', playerID, player);
-            this.firebase.child(playerID).update(player);
+        updatePlayer: function (player) {
+            // console.log('Game#updatePlayer', player);
+            this.firebase.child(player.firebase.id).update(player.firebase);
         },
 
         getLocalPlayerID: function () {
