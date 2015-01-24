@@ -111,12 +111,12 @@
       $("#"+snap.id).delete();
     });
 
-    map = new Firebase('https://sml.firebaseio.com/map');
+    map = new Firebase('https://dumplings.firebaseio.com/map');
 
     map.on('child_added',   function(e) {
       console.log('child_added',e.key(),e.val());
 
-      var element = $("<map id='map"+e.key()+"' />");
+      var element = $("<map id='"+e.key()+"' />");
       element.css({ top: e.val().y, left: e.val().x });
       element.addClass(e.val().kind)
 
@@ -126,18 +126,58 @@
 
     map.on('child_changed', function(e) {
       console.log('child_changed',e.key(),e.val());
-      // $("#"+snap.id).animate({ top: snap.y, left: snap.x },0);
+      $("map#"+e.key()).animate({ top: e.val().y, left: e.val().x },0);
     });
 
     map.on('child_removed', function(e) {
-      console.log('child_removed',e.val());
-      // $("#"+snap.id).delete();
+      console.log('child_removed',e.key(),e.val());
+      $("map#"+e.key()).remove();
     });
 
-    state = new Firebase('https://sml.firebaseio.com/state/timer');
+    state = new Firebase('https://dumplings.firebaseio.com/state/timer');
 
     state.on('value',   function(e) {
       $("#timer").html("Time to end this round: "+e.val()+"sec.");
+    });
+
+    $("button#set-master").click(function() {
+      console.log("I'AM THE MASTER");
+
+
+
+      function resetMap() {
+        map.remove();
+        _.times(10,function() {
+          var element = map.push();
+          element.set({x:_.random(0, 700), y:_.random(0, 300), kind:'banana'});
+        });
+      }
+
+
+
+
+
+
+      state.once('value', function(e) {
+          var timer = e.val();
+
+          console.log('start value', timer)
+
+          setInterval(function() {
+            if (timer <= 0) {
+              timer = 10;
+              resetMap();
+            }
+
+
+            timer = timer - 1;
+            state.set(timer);
+          },1000);
+      });
+
+      
+
+
     });
 
     
