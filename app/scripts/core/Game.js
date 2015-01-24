@@ -184,28 +184,6 @@ define([
             this.firebase.child(player.firebase.id).update(player.firebase);
         },
 
-        getPoints: function () {
-            this.points.on('value', function (snapshot) {
-                Engine.tileList = snapshot.val();
-                // Add points.
-
-                if (!Engine.tileList) {
-                    return;
-                }
-
-                Engine.tileList.forEach(function (tile) {
-                    Engine.pointGroup.add(App.game.phaser.add.tileSprite(
-                        (Engine.tileSize.width * tile.x),
-                        (Engine.tileSize.height * tile.y),
-                        Engine.tileSize.width,
-                        Engine.tileSize.height,
-                        'tile-ground',
-                        3
-                    ));
-                });
-            });
-        },
-
         updatePoints: function () {
             this.points.set(Engine.tileList);
         },

@@ -71,6 +71,28 @@ define([
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
         },
 
+        _getPoints: function () {
+            App.game.points.on('value', function (snapshot) {
+                Engine.tileList = snapshot.val();
+                // Add points.
+
+                if (!Engine.tileList) {
+                    return;
+                }
+
+                Engine.tileList.forEach(function (tile) {
+                    Engine.pointGroup.add(App.game.phaser.add.tileSprite(
+                        (Engine.tileSize.width * tile.x),
+                        (Engine.tileSize.height * tile.y),
+                        Engine.tileSize.width,
+                        Engine.tileSize.height,
+                        'tile-ground',
+                        3
+                    ));
+                });
+            });
+        },
+
         create: function () {
             // console.warn('Engine#create');
             App.game.phaser.physics.startSystem(Phaser.Physics.ARCADE);
@@ -78,6 +100,8 @@ define([
 
             Engine._setupMap();
             Engine._setupWorld();
+
+            Engine._getPoints();
 
             App.game.createResetPointsHandler();
 
@@ -132,7 +156,6 @@ define([
 
             if (localPlayer.firebase.id) {
                 App.game.updatePlayer(localPlayer);
-                App.game.getPoints();
             }
         },
 
