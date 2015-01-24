@@ -23,6 +23,10 @@ define([
         return this._id;
     };
 
+    Point.prototype.setID = function (id) {
+        this._id = id;
+    };
+
     Point.prototype.destroy = function () {
         // 1. Usunąć z Phaser.
     };
@@ -33,7 +37,9 @@ define([
 
     Point.prototype.sync = function () {
         this._fb.update({
-            id: this._id
+            x: this.x,
+            y: this.y,
+            value: this._value
         });
     };
 

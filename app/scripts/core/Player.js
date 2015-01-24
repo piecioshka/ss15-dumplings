@@ -25,6 +25,10 @@ define([
         return this._id;
     };
 
+    Player.prototype.setID = function (id) {
+        this._id = id;
+    };
+
     Player.prototype.destroy = function () {
         // 1. Usunąć z Phaser.
     };
@@ -32,7 +36,8 @@ define([
     Player.prototype.sync = function () {
         // 1. Wysłać do Firebase
         this._fb.update({
-            id: this._id
+            x: this.x,
+            y: this.y
         });
     };
 

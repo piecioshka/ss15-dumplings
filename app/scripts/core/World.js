@@ -2,8 +2,10 @@ define([
     'lodash',
     'backbone',
     'firebase',
-    'core/Utilities'
-], function (_, Backbone, Firebase, Utilities) {
+    'core/Utilities',
+    'core/Player',
+    'core/Point'
+], function (_, Backbone, Firebase, Utilities, Player, Point) {
     'use strict';
 
     var World = function () {
@@ -45,6 +47,32 @@ define([
         delete this._points[point.getID()];
     };
 
+    World.prototype.loadChildren = function () {
+        var self = this;
+
+        this._fb.once('value', function (snapshot) {
+            var snap = snapshot.val();
+
+            _.each(_.keys(snap.players), function (playerID) {
+                var snapPlayer = snap.players[playerID];
+
+                var player = new Player(snapPlayer.x, snapPlayer.y);
+                player.setID(playerID);
+
+                self.addPlayer(player);
+            });
+
+            _.each(_.keys(snap.points), function (pointID) {
+                var snapPoint = snap.points[pointID];
+
+                var point = new Point(snapPoint.x, snapPoint.y, snapPoint.value);
+                point.setID(pointID);
+
+                self.addPoint(point);
+            });
+        });
+    };
+
     /**
      * @param {Player} player
      */
@@ -54,6 +82,8 @@ define([
         // 2. Dodajemy do grupy Phaser
         // 3. Dodajemy do Firebase
         player.setFirebaseConnection(this._fb.child('/players/' + player.getID()));
+        // 4. Aktualizujemy pozycję w Firebase
+        player.sync();
     };
 
     World.prototype.removePlayer = function (player) {

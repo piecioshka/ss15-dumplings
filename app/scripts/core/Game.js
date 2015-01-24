@@ -21,10 +21,6 @@ define([
         world.setFirebaseConnection(this._fb.child(world.getID()));
     };
 
-    Game.prototype.fetchWorlds = function (cb) {
-        this._fb.once('value', cb);
-    };
-
     Game.prototype.setupEvents = function () {
         this._fb.on('child_removed', function () {
             location.reload(true);
@@ -34,7 +30,7 @@ define([
     Game.prototype.loadWorlds = function () {
         var self = this;
 
-        this.fetchWorlds(function (snapshot) {
+        this._fb.once('value', function (snapshot) {
             var snap = snapshot.val();
 
             _.each(_.keys(snap), function (worldID) {
@@ -42,6 +38,8 @@ define([
                 world.setID(worldID);
 
                 self.addWorld(world);
+
+                world.loadChildren();
             });
         });
     };
