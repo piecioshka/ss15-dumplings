@@ -53,7 +53,7 @@ define([
         setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase-test');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase-test-test');
             this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
@@ -131,7 +131,8 @@ define([
 
         _createPhaserPlayer: function (player) {
             // console.log('Game#_createPhaserPlayer', player.toString());
-            player.phaser = this.phaser.add.sprite(0, 10, 'tile-monkey');
+            player.phaser = this.phaser.add.sprite(0, 32 * 8, 'tile-monkey');
+            player.phaser.name = 'player';
             this.phaser.physics.enable(player.phaser, Phaser.Physics.ARCADE);
 
             player.phaser.body.bounce.y = 0.1;
@@ -144,6 +145,7 @@ define([
                 fill: "#000",
                 align: "center"
             });
+            player.label.name = 'label';
         },
 
         removePlayerById: function (playerID) {
