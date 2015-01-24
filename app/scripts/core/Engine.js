@@ -15,7 +15,7 @@ define([
 
         preload: function () {
             // console.warn('Engine#preload');
-            App.game.phaser.load.image('tile-ground', AssetsLoader.IMAGES.GROUND);
+            App.game.phaser.load.spritesheet('tile-ground', AssetsLoader.IMAGES.GROUND, 32, 32);
             App.game.phaser.load.image('tile-monkey', AssetsLoader.IMAGES.MONKEY);
             App.game.phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         },
@@ -33,6 +33,13 @@ define([
             Engine.world.resizeWorld();
         },
 
+        _setupRaft: function () {
+            console.log(App.game.phaser.add);
+            Engine.raft = App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 4);
+            App.game.phaser.physics.enable(Engine.raft, Phaser.Physics.ARCADE);
+            Engine.raft.body.velocity.x = 120;
+        },
+
         create: function () {
             // console.warn('Engine#create');
             App.game.phaser.physics.startSystem(Phaser.Physics.ARCADE);
@@ -43,26 +50,12 @@ define([
             Engine._setupWorld();
 
             App.game._createPhaserPlayer(App.game.localPlayer);
-            //this.camera.follow(App.game.localPlayer.phaser);
-
-            // Stay camera on player.
-            //App.game.phaser.camera.follow(this.player);
+            App.game.phaser.camera.follow(App.game.localPlayer.phaser);
 
             Engine.cursors = App.game.phaser.input.keyboard.createCursorKeys();
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-            Engine.raft = App.game.phaser.add.sprite(0, 0, 'tile-ground');
-            App.game.phaser.physics.enable(Engine.raft, Phaser.Physics.ARCADE);
-            Engine.raft.body.velocity.x = 120;
-
-            //this.raft.position.x = 4;
-            Engine.raft.y = (32 * 9);
-            Engine.raft.x = (32 * 7);
-            Engine.raft.setTo(0.5, 0.5);
-            //this.raft.set(3);
-            //this.raft.lifespan = 3;
-            //this.raft.visible = false;
-            //this.raft.rotation = 0.2;
+            Engine._setupRaft();
         },
 
         update: function () {
