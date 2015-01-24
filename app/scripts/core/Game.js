@@ -99,20 +99,20 @@ define([
             this.firebase.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
                 if (snap.id !== self.localPlayer.firebase.id) {
-                    console.info('child_added', snap);
+                    // console.info('child_added', snap);
                     self.createPlayer(snap);
                 }
             });
 
             this.firebase.on('child_changed', function (snapshot) {
                 var snap = snapshot.val();
-                console.info('child_changed', snap);
+                // console.info('child_changed', snap);
                 self.updatePlayerPosition(snap);
             });
 
             this.firebase.on('child_removed', function (snapshot) {
                 var snap = snapshot.val();
-                console.info('child_removed', snap);
+                // console.info('child_removed', snap);
                 self.removePlayerById(snap.id);
             });
 
@@ -166,8 +166,13 @@ define([
         },
 
         updatePlayerPosition: function (params) {
-            console.log('Game#updatePlayerPosition', params);
-            console.log('-------------------------------')
+            // console.log('Game#updatePlayerPosition', params);
+            _.each(this.players, function (player) {
+                if (player.firebase.id === params.id) {
+                    player.phaser.x = player.x;
+                    player.phaser.y = player.y;
+                }
+            }, this);
         },
 
         updatePlayer: function (player) {

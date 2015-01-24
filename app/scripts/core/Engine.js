@@ -65,8 +65,6 @@ define([
                 return;
             }
 
-            console.log(localPlayer.firebase.id);
-
             // Enable collisions
             App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
