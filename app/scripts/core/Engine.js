@@ -64,6 +64,8 @@ define([
                 return;
             }
 
+            console.log(localPlayer.firebase.id);
+
             // Enable collisions
             App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
@@ -99,12 +101,15 @@ define([
                 Engine.jumpTimer = App.game.phaser.time.now - 50;
             }
 
+            localPlayer.label.x = localPlayer.phaser.x;
+            localPlayer.label.y = localPlayer.phaser.y - 10;
+
+            localPlayer.firebase.x = localPlayer.phaser.x;
+            localPlayer.firebase.y = localPlayer.phaser.y;
+
             if (localPlayer.firebase.id) {
                 App.game.updatePlayer(localPlayer);
             }
-
-            localPlayer.label.x = localPlayer.phaser.x;
-            localPlayer.label.y = localPlayer.phaser.y - 10;
         },
 
         render: function () {
