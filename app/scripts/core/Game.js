@@ -129,7 +129,7 @@ define([
     Game.WIDTH = 960;
     Game.HEIGHT = 320;
     
-    Game.STORAGE_PLAYER_ID_KEY = 'playerId';
+    Game.STORAGE_PLAYER_ID_KEY = 'ss15-dumplings-player-id';
 
     return Game;
 });
