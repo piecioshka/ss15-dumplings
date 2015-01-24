@@ -176,6 +176,12 @@ define([
         },
 
         updatePlayer: function (player) {
+            player.label.x = player.phaser.x;
+            player.label.y = player.phaser.y - 10;
+
+            player.firebase.x = player.phaser.x;
+            player.firebase.y = player.phaser.y;
+
             // console.log('Game#updatePlayer', player);
             this.firebase.child(player.firebase.id).update(player.firebase);
         },

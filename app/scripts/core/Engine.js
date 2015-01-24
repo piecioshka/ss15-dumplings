@@ -60,30 +60,12 @@ define([
             // console.warn('Engine#update');
             var localPlayer = App.game.localPlayer;
 
+            // Is player alive?
             if (!localPlayer.phaser.alive) {
                 return;
             }
 
-            // Enable collisions
-            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
-                if (tile.index === 4) {
-                    Engine.map.removeTile(tile.x, tile.y);
-                } else if (tile.index === 5) {
-                    console.log('I am swimming!!!');
-                }
-            }, null, this);
-
-            var currentRaftVelocity = Engine.raft.body.velocity.x;
-
-            App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, tile) {
-                if (tile.index === 1) {
-                    Engine.raft.body.velocity.x = (currentRaftVelocity > 0) ? -120 : 120;
-                }
-            }, null, this);
-
-            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tileSprite) {
-                //console.log(Engine.raft);
-            }, null, this);
+            this._setCollisions();
 
             // How much different between localPlayer and ground.
             localPlayer.phaser.body.velocity.x = 0;
@@ -99,15 +81,38 @@ define([
                 Engine.jumpTimer = App.game.phaser.time.now - 50;
             }
 
-            localPlayer.label.x = localPlayer.phaser.x;
-            localPlayer.label.y = localPlayer.phaser.y - 10;
-
-            localPlayer.firebase.x = localPlayer.phaser.x;
-            localPlayer.firebase.y = localPlayer.phaser.y;
-
             if (localPlayer.firebase.id) {
                 App.game.updatePlayer(localPlayer);
             }
+        },
+
+        _setCollisions: function () {
+            var localPlayer = App.game.localPlayer;
+
+            // Is player alive?
+            if (!localPlayer.phaser.alive) {
+                return;
+            }
+
+            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
+                if (tile.index === 4) {
+                    Engine.map.removeTile(tile.x, tile.y);
+                }
+            }, null, this);
+
+            var currentRaftVelocity = Engine.raft.body.velocity.x;
+
+            App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, tile) {
+                if (tile.index === 1) {
+                    Engine.raft.body.velocity.x = (currentRaftVelocity > 0) ? -120 : 120;
+                }
+            }, null, this);
+
+            /*
+            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tileSprite) {
+                //console.log(Engine.raft);
+            }, null, this);
+            */
         },
 
         render: function () {
