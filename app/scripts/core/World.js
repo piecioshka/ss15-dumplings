@@ -70,6 +70,10 @@ define([
         return this._id;
     };
 
+    World.prototype.setID = function (id) {
+        this._id = id;
+    };
+
     /**
      * @param {Firebase} connection
      */
