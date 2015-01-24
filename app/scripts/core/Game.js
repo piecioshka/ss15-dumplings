@@ -128,6 +128,7 @@ define([
 
             this._createPhaserPlayer(player);
             this.players.push(player);
+            Engine.group.add(player.phaser);
         },
 
         _createPhaserPlayer: function (player) {

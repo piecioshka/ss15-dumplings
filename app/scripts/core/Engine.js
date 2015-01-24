@@ -1,7 +1,8 @@
 define([
+    'phaser',
     'core/App',
     'core/helpers/AssetsLoader'
-], function (App, AssetsLoader) {
+], function (Phaser, App, AssetsLoader) {
     'use strict';
 
     var Engine = {
@@ -9,6 +10,7 @@ define([
         map: undefined,
         raft: undefined,
         world: undefined,
+        group: undefined,
 
         jumpTimer: 0,
         jumpButton: undefined,
@@ -54,6 +56,10 @@ define([
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
             Engine._setupRaft();
+
+            Engine.group = App.game.phaser.add.group();
+            Engine.group.enableBody = true;
+            Engine.group.physicsBodyType = Phaser.Physics.ARCADE;
         },
 
         update: function () {
@@ -108,6 +114,8 @@ define([
                 }
             }, null, this);
 
+            App.game.phaser.physics.arcade.collide(Engine.group, Engine.world);
+            
             /*
             App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tileSprite) {
                 //console.log(Engine.raft);
