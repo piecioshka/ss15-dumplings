@@ -9,7 +9,7 @@
     var when = require('when');
     var nodefn = require('when/node');
 
-    // Config file for optimze requireJS.
+    // Config file for optimize requireJS.
     var config = require('./config.json');
 
     function removeFiles(fileList) {
