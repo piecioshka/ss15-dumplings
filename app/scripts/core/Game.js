@@ -135,9 +135,9 @@ define([
             player.phaser.name = 'player';
             this.phaser.physics.enable(player.phaser, Phaser.Physics.ARCADE);
 
-            player.phaser.body.bounce.y = 0.1;
+            player.phaser.body.bounce.y = 0;
             player.phaser.body.collideWorldBounds = true;
-            player.phaser.body.setSize(24, 28, 4, 2);
+            player.phaser.body.setSize(12, 28, 10, 2);
             player.phaser.body.gravity.y = 350;
 
             player.label = this.phaser.add.text(0, 0, player.getName(), {
