@@ -60,6 +60,9 @@ define([
             Engine.group = App.game.phaser.add.group();
             Engine.group.enableBody = true;
             Engine.group.physicsBodyType = Phaser.Physics.ARCADE;
+
+            // Add local player as first player to group.
+            Engine.group.add(App.game.localPlayer.phaser);
         },
 
         update: function () {
@@ -100,24 +103,21 @@ define([
                 return;
             }
 
-            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
+            App.game.phaser.physics.arcade.collide(Engine.group, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
                     Engine.map.removeTile(tile.x, tile.y);
                 }
             }, null, this);
 
-            var currentRaftVelocity = Engine.raft.body.velocity.x;
+            App.game.phaser.physics.arcade.collide(Engine.group, Engine.raft, function (sprite, tile) {
+                console.log('Raft touch!');
+            }, null, this);
 
+            var currentRaftVelocity = Engine.raft.body.velocity.x;
             App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, tile) {
                 if (tile.index === 1) {
                     Engine.raft.body.velocity.x = (currentRaftVelocity > 0) ? -120 : 120;
                 }
-            }, null, this);
-
-            App.game.phaser.physics.arcade.collide(Engine.group, Engine.world);
-
-            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tile) {
-                console.log('Raft touch!');
             }, null, this);
         },
 

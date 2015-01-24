@@ -25,8 +25,8 @@ define([
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
-        this.setupManager.addTask(this.setupLocalPlayer);
         this.setupManager.addTask(this.setupCommunication);
+        this.setupManager.addTask(this.setupLocalPlayer);
         this.setupManager.addTask(this.setupHandlers);
 
         this.setupManager.resolveAllTasks(function () {
@@ -50,6 +50,16 @@ define([
             return p;
         },
 
+        setupCommunication: function () {
+            var p = new promise.Promise();
+
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
+            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
+
+            p.done();
+            return p;
+        },
+
         setupLocalPlayer: function () {
             console.log('Game#setupLocalPlayer');
             var p = new promise.Promise();
@@ -60,20 +70,9 @@ define([
                 Storage.put(Game.STORAGE_PLAYER_ID_KEY, playerID);
             }
 
+            console.warn('Hello Local Player (ID: %s)', playerID);
             this.localPlayer = new Player();
             this.localPlayer.firebase.id = playerID;
-
-            // console.warn('Hello Local Player (ID: %s)', playerID);
-
-            p.done();
-            return p;
-        },
-
-        setupCommunication: function () {
-            var p = new promise.Promise();
-
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
-            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
             return p;
@@ -121,10 +120,11 @@ define([
         },
 
         createPlayer: function (params) {
-            console.log('Game#createPlayer', params);
+            // console.log('Game#createPlayer', params);
+
+            console.warn('Hello Player (ID: %s)', params.id);
             var player = new Player();
             player.firebase = params;
-            // console.warn('Hello Player (ID: %s)', player.firebase.id);
 
             this._createPhaserPlayer(player);
             this.players.push(player);
