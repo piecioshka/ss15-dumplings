@@ -117,7 +117,7 @@ define([
             if (localPlayer.data.id) {
                 // Update only when position is changed.
                 if (localPlayer.data.x !== localPlayer.phaser.x || localPlayer.data.y !== localPlayer.phaser.y) {
-                    App.game.updatePlayer(localPlayer);
+                    // App.game.updatePlayer(localPlayer);
                     App.game.updateFirebasePlayer(localPlayer);
                 }
             }
