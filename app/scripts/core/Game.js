@@ -53,7 +53,7 @@ define([
         setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase-test');
             this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
@@ -85,8 +85,6 @@ define([
 
             this.firebase.child(currentPlayerID).once('value', function (snapshot) {
                 var snap = snapshot.val();
-
-                console.log('snap', snap);
 
                 if (snap !== null) {
                     self.localPlayer.firebase = snap;
