@@ -170,18 +170,13 @@ define([
             // console.log('Game#updatePlayerPosition', params);
             _.each(this.players, function (player) {
                 if (player.firebase.id === params.id) {
-                    player.phaser.x = params.x;
-                    player.phaser.y = params.y;
+                    player.updatePosition(params);
                 }
             }, this);
         },
 
         updatePlayer: function (player) {
-            player.label.x = player.phaser.x;
-            player.label.y = player.phaser.y - 10;
-
-            player.firebase.x = player.phaser.x;
-            player.firebase.y = player.phaser.y;
+            player.updatePosition(player.phaser);
 
             // console.log('Game#updatePlayer', player);
             this.firebase.child(player.firebase.id).update(player.firebase);
