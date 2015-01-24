@@ -1,28 +1,31 @@
 {
-    "name": "ss15-dumplings",
-    "version": "0.1.0",
-    "author": "ss15-dumplings team",
-    "contributors": [
-        {
-            "name": "Konrad Kowalski",
-            "email": "rootsher@gmail.com"
-        },
-        {
-            "name": "Piotr Kowalski",
-            "email": "piecioshka@gmail.com"
-        }
-    ],
-    "description": "",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/staticshowdown/ss15-dumplings"
+  "name": "ss15-dumplings",
+  "version": "0.1.0",
+  "author": "ss15-dumplings team",
+  "contributors": [
+    {
+      "name": "Konrad Kowalski",
+      "email": "rootsher@gmail.com"
     },
-    "keywords": [],
-    "dependencies": {},
-    "devDependencies": {
-        "gulp": "3.8.x",
-        "requirejs": "2.1.x",
-        "del": "1.1.x",
-        "when": "3.6.x"
+    {
+      "name": "Piotr Kowalski",
+      "email": "piecioshka@gmail.com"
+    },
+    {
+      "name": "Kamil Załęski",
+      "email": "kamil.zaleski@gmail.com"
     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/staticshowdown/ss15-dumplings"
+  },
+  "devDependencies": {
+    "gulp": "latest",
+    "gulp-util": "latest",
+    "gulp-help": "latest",
+    "requirejs": "latest",
+    "del": "latest",
+    "q": "latest"
+  }
 }

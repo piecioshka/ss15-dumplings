@@ -4,11 +4,11 @@ define([
     'lodash',
     'phaser',
     'promise',
-    'Utilities',
-    'Engine',
-    'helpers/AssetsLoader',
-    'helpers/Scheduler',
-    'helpers/Storage'
+    'core/Utilities',
+    'core/Engine',
+    'core/helpers/AssetsLoader',
+    'core/helpers/Scheduler',
+    'core/helpers/Storage'
 ], function (Firebase, $, _, Phaser, promise, Utilities, Engine, AssetsLoader, Scheduler, Storage) {
     'use strict';
 
