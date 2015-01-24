@@ -1,1 +1,4 @@
 .divshot-cache
+.idea/
+nbproject/
+dist/
