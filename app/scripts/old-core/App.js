@@ -1,8 +1,10 @@
-define([], function () {
+define([
+
+], function () {
     'use strict';
 
     var App = {
-        game: null
+        game: undefined
     };
 
     return App;
