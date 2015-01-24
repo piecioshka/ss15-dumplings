@@ -23,12 +23,12 @@ define([
             height: 32
         },
 
-        tileList: [
+        tileList: [/*
             { x: 4, y: 1 },
             { x: 8, y: 4 },
             { x: 19, y: 0 },
             { x: 15, y: 3 }
-        ],
+        */],
 
         preload: function () {
             // console.warn('Engine#preload');
@@ -165,6 +165,11 @@ define([
                 /*if (tileSprite.index === 4) {
                     Engine.map.removeTile(tileSprite.x, tileSprite.y);
                 }*/
+
+                if (!Engine.tileList) {
+                    return;
+                }
+
                 var positionX = tileSprite.x / Engine.tileSize.width;
                 var positionY = tileSprite.y / Engine.tileSize.height;
 
