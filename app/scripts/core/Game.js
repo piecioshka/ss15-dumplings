@@ -27,7 +27,7 @@ define([
         this.players = [];
 
         // List of points.
-        this.pointList = [];
+        this.pointList = Engine.defaultPointList;
 
         var allMethods = _.functions(this);
         allMethods.unshift(this);
@@ -153,8 +153,6 @@ define([
                 var snap = snapshot.val();
 
                 if (snap === null) {
-                    self.pointList = Engine.defaultPointList;
-                } else {
                     self.pointList = snap;
                 }
 
