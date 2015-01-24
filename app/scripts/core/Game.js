@@ -223,7 +223,7 @@ define([
 
             _.each(this.players, function (player) {
                 playerSettings.id = player.data.id;
-                this.firebasePlayers.child(player.data.id).update(playerSettings);
+                this.firebasePlayers.child(playerSettings.id).update(playerSettings);
             }, this);
 
             this.firebasePoints.set(Engine.defaultPointList);

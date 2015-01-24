@@ -135,8 +135,12 @@ define([
                 Engine.jumpTimer = App.game.phaser.time.now - 10;
             }
 
+            // If exists local player (may be killed by system).
             if (localPlayer.data.id) {
-                App.game.updatePlayer(localPlayer);
+                // Update only when position is changed.
+                if (localPlayer.data.x !== localPlayer.phaser.x || localPlayer.data.y !== localPlayer.phaser.y) {
+                    App.game.updatePlayer(localPlayer);
+                }
             }
         },
 
