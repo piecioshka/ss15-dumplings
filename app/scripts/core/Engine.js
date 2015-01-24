@@ -13,7 +13,7 @@ define([
         jumpButton: undefined,
 
         preload: function () {
-            console.warn('Engine#preload');
+            // console.warn('Engine#preload');
             App.game.phaser.load.image('tile-ground', AssetsLoader.IMAGES.GROUND);
             App.game.phaser.load.image('tile-monkey', AssetsLoader.IMAGES.MONKEY);
             App.game.phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
@@ -33,7 +33,7 @@ define([
         },
 
         create: function () {
-            console.warn('Engine#create');
+            // console.warn('Engine#create');
             App.game.phaser.physics.startSystem(Phaser.Physics.ARCADE);
             App.game.phaser.stage.backgroundColor = '#fff';
             App.game.phaser.physics.arcade.gravity.y = 350;
@@ -41,7 +41,8 @@ define([
             Engine._setupMap();
             Engine._setupWorld();
 
-            App.game.createLocalPlayer();
+            App.game._createPhaserPlayer(App.game.localPlayer);
+            this.camera.follow(App.game.localPlayer.phaser);
 
             Engine.cursors = App.game.phaser.input.keyboard.createCursorKeys();
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -60,9 +61,8 @@ define([
             // Enable collisions
             App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.world, function (sprite, tile) {
                 if (tile.index === 4) {
-                    console.log('am am am!!!');
                     self.map.removeTile(tile.x, tile.y);
-                    }
+                }
             }, null, this);
 
             // How much different between localPlayer and ground.

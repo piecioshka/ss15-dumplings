@@ -21,16 +21,16 @@ define([
         this.players = [];
         this.localPlayer = undefined;
 
-        _.bindAll(this, 'setupCommunication', 'setupHandlers');
+        _.bindAll(this, 'setupLocalPlayer', 'setupCommunication', 'setupHandlers');
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
-        this.setupManager.addTask(this.setupLocalPlayerID);
+        this.setupManager.addTask(this.setupLocalPlayer);
         this.setupManager.addTask(this.setupCommunication);
         this.setupManager.addTask(this.setupHandlers);
 
         this.setupManager.resolveAllTasks(function () {
-            console.info('Game loaded!');
+            // console.info('Game loaded!');
         });
     }
 
@@ -50,25 +50,30 @@ define([
             return p;
         },
 
-        setupCommunication: function () {
+        setupLocalPlayer: function () {
+            console.log('Game#setupLocalPlayer');
             var p = new promise.Promise();
+            var playerID = Storage.get(Game.STORAGE_PLAYER_ID_KEY);
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
-            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
+            if (playerID === null) {
+                playerID = Utilities.guid();
+                Storage.put(Game.STORAGE_PLAYER_ID_KEY, playerID);
+            }
+
+            this.localPlayer = new Player();
+            this.localPlayer.firebase.id = playerID;
+
+            console.warn('Hello Local Player (ID: %s)', playerID);
 
             p.done();
             return p;
         },
 
-        setupLocalPlayerID: function () {
+        setupCommunication: function () {
             var p = new promise.Promise();
-            var playerID;
 
-            if (Storage.get(Game.STORAGE_PLAYER_ID_KEY) === null) {
-                playerID = Utilities.guid();
-                Storage.put(Game.STORAGE_PLAYER_ID_KEY, playerID);
-                console.warn('Hello new Player (ID: %s)', playerID);
-            }
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
+            this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
             return p;
@@ -83,10 +88,8 @@ define([
                 var snap = snapshot.val();
 
                 if (snap !== null) {
-                    self.createLocalPlayer();
                     self.localPlayer.firebase = snap;
                 } else {
-                    self.localPlayer.firebase.id = currentPlayerID;
                     self.firebase.child(currentPlayerID).set(self.localPlayer.firebase);
                 }
             });
@@ -116,12 +119,15 @@ define([
         createPlayer: function (params) {
             console.log('Game#createPlayer', params);
             var player = new Player();
+            player.firebase = params;
+            console.warn('Hello Player (ID: %s)', player.firebase.id);
+
             this._createPhaserPlayer(player);
             this.players.push(player);
         },
 
         _createPhaserPlayer: function (player) {
-            console.log('Game#_createPhaserPlayer', player);
+            // console.log('Game#_createPhaserPlayer', player.toString());
             player.phaser = this.phaser.add.sprite(0, 10, 'tile-monkey');
             this.phaser.physics.enable(player.phaser, Phaser.Physics.ARCADE);
 
@@ -129,20 +135,11 @@ define([
             player.phaser.body.collideWorldBounds = true;
             player.phaser.body.setSize(30, 30, 1, 1);
 
-            player.label = this.phaser.add.text(0, 0, this.getLocalPlayerID().substr(0, 5), {
+            player.label = this.phaser.add.text(0, 0, player.getName(), {
                 font: "11px Arial",
                 fill: "#000",
                 align: "center"
             });
-        },
-
-        createLocalPlayer: function () {
-            console.log('Game#createLocalPlayer');
-            this.localPlayer = new Player();
-            this._createPhaserPlayer(this.localPlayer);
-
-            // Stay camera on localPlayer.
-            this.phaser.camera.follow(this.localPlayer.phaser);
         },
 
         removePlayerById: function (playerID) {
