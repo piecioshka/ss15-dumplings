@@ -108,7 +108,7 @@ define([
         setupFirebasePlayersEvents: function () {
             var p = new promise.Promise();
             var self = this;
-            var currentPlayerID = this.getLocalPlayerID();
+            var currentPlayerID = Storage.get(Game.STORAGE_PLAYER_ID_KEY);
 
             this.firebasePlayers.child(currentPlayerID).once('value', function (snapshot) {
                 var snap = snapshot.val();
@@ -122,21 +122,21 @@ define([
 
             this.firebasePlayers.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
+                console.info('players: child_added', snap);
                 if (snap.id !== self.localPlayer.data.id) {
-                    // console.info('child_added', snap);
                     self.createPlayer(snap);
                 }
             });
 
             this.firebasePlayers.on('child_changed', function (snapshot) {
                 var snap = snapshot.val();
-                // console.info('child_changed', snap);
+                console.info('players: child_changed', snap);
                 self.updatePlayerPosition(snap);
             });
 
             this.firebasePlayers.on('child_removed', function (snapshot) {
                 var snap = snapshot.val();
-                // console.info('child_removed', snap);
+                console.info('players: child_removed', snap);
                 self.removePlayerById(snap.id);
             });
 
@@ -151,14 +151,14 @@ define([
 
             this.firebasePoints.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
-                console.log('child_added', snap);
+                console.log('points: child_added', snap);
                 var pointTile = self.phaser.add.tileSprite(32 * snap.x, 32 * snap.y, 32, 32, 'tile-ground', 3);
                 Engine.pointGroup.add(pointTile);
             });
 
             this.firebasePoints.on('child_changed', function (snapshot) {
                 var snap = snapshot.val();
-                console.log('child_changed', snap);
+                console.log('points: child_changed', snap);
                 var pointTile = self.phaser.add.tileSprite(32 * snap.x, 32 * snap.y, 32, 32, 'tile-ground', 3);
                 Engine.pointGroup.add(pointTile);
             });
@@ -221,32 +221,57 @@ define([
         updatePlayerPosition: function (params) {
             /// console.log('Game#updatePlayerPosition', params);
 
-            _.each(this.players, function (player) {
-                if (player.data.id === params.id) {
-                    player.updatePosition(params);
-                }
-            }, this);
-
             if (this.localPlayer.data.id === params.id) {
                 this.localPlayer.updatePosition(params);
+            } else {
+                _.each(this.players, function (player) {
+                    if (player.data.id === params.id) {
+                        player.updatePosition(params);
+                    }
+                }, this);
             }
         },
 
         updatePlayer: function (player) {
-            // console.log('Game#updatePlayer', player);
-            player.updatePosition(player.phaser);
+            player.updatePosition(player.data);
+        },
+
+        updateFirebasePlayer: function (player) {
             this.firebasePlayers.child(player.data.id).update(player.data);
+        },
+
+        updatePoints: function (points) {
+            this.pointList = points;
         },
 
         updateFirebasePoints: function (points) {
             this.firebasePoints.set(points);
         },
 
-        getLocalPlayerID: function () {
-            return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
+        // Reset methods.
+        // --------------
+
+        resetPoints: function () {
+            this.pointList = Engine.defaultPointList;
         },
 
-        restorePlayerPositions: function () {
+        resetFirebasePoints: function () {
+            this.firebasePoints.set(Engine.defaultPointList);
+        },
+
+        resetPlayers: function () {
+            var playerSettings = _.clone(Player.DEFAULT_SETTINGS);
+
+            playerSettings.id = this.localPlayer.data.id;
+            this.localPlayer.data = playerSettings;
+
+            _.each(this.players, function (player, index) {
+                playerSettings.id = player.data.id;
+                this.players[index].data = playerSettings;
+            }, this);
+        },
+
+        resetFirebasePlayers: function () {
             var playerSettings = _.clone(Player.DEFAULT_SETTINGS);
 
             playerSettings.id = this.localPlayer.data.id;
@@ -259,9 +284,11 @@ define([
         },
 
         restore: function () {
-            this.pointList = Engine.defaultPointList;
-            this.updateFirebasePoints(this.pointList);
-            this.restorePlayerPositions();
+            this.resetPoints();
+            this.resetFirebasePoints();
+
+            this.resetPlayers();
+            this.resetFirebasePlayers();
         }
     };
     

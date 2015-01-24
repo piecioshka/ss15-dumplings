@@ -118,6 +118,7 @@ define([
                 // Update only when position is changed.
                 if (localPlayer.data.x !== localPlayer.phaser.x || localPlayer.data.y !== localPlayer.phaser.y) {
                     App.game.updatePlayer(localPlayer);
+                    App.game.updateFirebasePlayer(localPlayer);
                 }
             }
         },
@@ -140,6 +141,7 @@ define([
                     return !((tile.x === positionX) && (tile.y === positionY));
                 });
 
+                App.game.updatePoints(App.game.pointList);
                 App.game.updateFirebasePoints(App.game.pointList);
             }, null, this);
 

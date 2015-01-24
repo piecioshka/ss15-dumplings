@@ -28,7 +28,7 @@ define([
     Player.DEFAULT_SETTINGS = {
         id: undefined,
         x: 0,
-        y: 0,
+        y: 258,
         points: 0
     };
 
