@@ -44,7 +44,6 @@ define([
             // console.warn('Engine#create');
             App.game.phaser.physics.startSystem(Phaser.Physics.ARCADE);
             App.game.phaser.stage.backgroundColor = '#fff';
-            //App.game.phaser.physics.arcade.gravity.y = 350;
 
             Engine._setupMap();
             Engine._setupWorld();
@@ -106,8 +105,8 @@ define([
         },
 
         render: function () {
-            // Show bounding-box of player.
             // console.warn('Engine#render');
+
             // Show bounding-box of localPlayer.
             // App.game.phaser.debug.body(App.game.localPlayer.phaser);
 
