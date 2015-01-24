@@ -29,5 +29,10 @@ define([
         }
     };
 
+    AssetsLoader.IMAGES = {
+        MONKEY: 'assets/images/tile-monkey.png',
+        GROUND: 'assets/images/tile-ground.png'
+    };
+
     return AssetsLoader;
 });
