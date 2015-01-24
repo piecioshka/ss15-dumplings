@@ -144,6 +144,7 @@ define([
         setupFirebasePointsEvents: function () {
             var p = new promise.Promise();
             var self = this;
+
             this.firebasePoints.on('value', function (snapshot) {
                 self.pointList = snapshot.val();
                 // Add points.
@@ -154,8 +155,9 @@ define([
 
                 _.each(self.pointList, function (tile) {
                     Engine.pointGroup.add(this.phaser.add.tileSprite((Engine.tileSize.width * tile.x), (Engine.tileSize.height * tile.y), Engine.tileSize.width, Engine.tileSize.height, 'tile-ground', 3));
-                }, this);
+                }, self);
             });
+
             p.done();
             return p;
         },
@@ -168,14 +170,16 @@ define([
             player.data = params;
 
             this._createPhaserPlayer(player);
-            this.players.push(player);
             Engine.playerGroup.add(player.phaser);
+
+            this.players.push(player);
         },
 
         _createPhaserPlayer: function (player) {
             // console.log('Game#_createPhaserPlayer', player.toString());
             player.phaser = this.phaser.add.sprite(0, 32 * 8, 'tile-monkey');
             player.phaser.name = 'player';
+
             this.phaser.physics.enable(player.phaser, Phaser.Physics.ARCADE);
 
             player.phaser.body.bounce.y = 0;
@@ -224,9 +228,8 @@ define([
         },
 
         updatePlayer: function (player) {
-            player.updatePosition(player.phaser);
-
             // console.log('Game#updatePlayer', player);
+            player.updatePosition(player.phaser);
             this.firebasePlayers.child(player.data.id).update(player.data);
         },
 

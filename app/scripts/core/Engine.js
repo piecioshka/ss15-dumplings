@@ -79,7 +79,7 @@ define([
             Engine._setupMap();
             Engine._setupWorld();
 
-            document.querySelector('.reset').addEventListener('click', _.bind(App.game.restore, this));
+            document.querySelector('.reset').addEventListener('click', App.game.restore.bind(App.game));
 
             App.game._createPhaserPlayer(App.game.localPlayer);
             App.game.phaser.camera.follow(App.game.localPlayer.phaser);
