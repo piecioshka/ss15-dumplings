@@ -53,7 +53,7 @@ define([
         setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase1');
             this.points = new Firebase('https://dumplings.firebaseio.com/points');
             this.phaser = new Phaser.Game(Game.WIDTH + 100, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
@@ -186,6 +186,22 @@ define([
         getPoints: function () {
             this.points.on('value', function (snapshot) {
                 Engine.tileList = snapshot.val();
+                // Add points.
+
+                if (!Engine.tileList) {
+                    return;
+                }
+
+                Engine.tileList.forEach(function (tile) {
+                    Engine.pointGroup.add(App.game.phaser.add.tileSprite(
+                        (Engine.tileSize.width * tile.x),
+                        (Engine.tileSize.height * tile.y),
+                        Engine.tileSize.width,
+                        Engine.tileSize.height,
+                        'tile-ground',
+                        3
+                    ));
+                });
             });
         },
 
@@ -195,6 +211,19 @@ define([
 
         getLocalPlayerID: function () {
             return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
+        },
+
+        createResetPointsHandler: function () {
+            var self = this;
+
+            document.querySelector('.resetPoints').addEventListener('click', function () {
+                self.points.set([
+                    { x: 4, y: 1 },
+                    { x: 8, y: 4 },
+                    { x: 19, y: 0 },
+                    { x: 15, y: 3 }
+                ]);
+            });
         }
     };
     

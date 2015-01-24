@@ -2,3 +2,7 @@
     border: 4px solid #eee;
     float: left;
 }
+.resetPoints {
+    font-weight: bold;
+    font-family: Arial;
+}

@@ -36,8 +36,8 @@ define([
             // console.warn('Engine#preload');
             App.game.phaser.load.spritesheet('tile-ground', AssetsLoader.IMAGES.GROUND, 32, 32);
             App.game.phaser.load.image('tile-monkey', AssetsLoader.IMAGES.MONKEY);
-            // App.game.phaser.load.tilemap('map', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
-            App.game.phaser.load.tilemap('map', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
+            App.game.phaser.load.tilemap('map', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
+            //App.game.phaser.load.tilemap('map', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
         },
 
         _setupMap: function () {
@@ -69,18 +69,6 @@ define([
             Engine.pointGroup.name = 'points';
             Engine.pointGroup.enableBody = true;
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
-
-            // Add points.
-            Engine.tileList.forEach(function (tile) {
-                Engine.pointGroup.add(App.game.phaser.add.tileSprite(
-                    (Engine.tileSize.width * tile.x),
-                    (Engine.tileSize.height * tile.y),
-                    Engine.tileSize.width,
-                    Engine.tileSize.height,
-                    'tile-ground',
-                    3
-                ));
-            });
         },
 
         create: function () {
@@ -91,16 +79,31 @@ define([
             Engine._setupMap();
             Engine._setupWorld();
 
+            App.game.createResetPointsHandler();
+
             App.game._createPhaserPlayer(App.game.localPlayer);
             App.game.phaser.camera.follow(App.game.localPlayer.phaser);
 
             Engine.cursors = App.game.phaser.input.keyboard.createCursorKeys();
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-            // Map1.render(Engine);
-            Map2.render(Engine);
+            Map1.render(Engine);
+            // Map2.render(Engine);
             Engine._setupPlayerGroup();
             Engine._setupPointGroup();
+        },
+
+        _pointsManager: function () {
+            var text = '';
+            var style = { font: '18px Arial', fill: '#000', align: 'left' };
+
+            App.game.players.forEach(function (player) {
+                text += player.getName() + ': ' + player.firebase.points + '\n';
+            });
+
+            //console.log(App.game.players);
+
+            App.game.phaser.add.text(960, 0, text, style);
         },
 
         update: function () {
@@ -112,7 +115,8 @@ define([
                 return;
             }
 
-            this._setCollisions();
+            Engine._setCollisions();
+            Engine._pointsManager();
 
             // How much different between localPlayer and ground.
             localPlayer.phaser.body.velocity.x = 0;
@@ -147,6 +151,10 @@ define([
                     Engine.map.removeTile(tileSprite.x, tileSprite.y);
                 }*/
 
+                tileSprite.destroy();
+
+                App.game.updatePoints();
+
                 if (!Engine.tileList) {
                     return;
                 }
@@ -162,10 +170,6 @@ define([
 
                     return true;
                 });
-
-                tileSprite.destroy();
-
-                App.game.updatePoints();
             }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {
