@@ -1,4 +1,4 @@
-/*global localStorage */
+/*global localStorage, console */
 
 define([
     'firebase',
@@ -80,8 +80,12 @@ define([
         },
 
         setupPlayerID: function () {
+            var playerID;
+
             if (localStorage.getItem('playerId') === null) {
-                localStorage.setItem('playerId', Utilities.guid());
+                playerID = Utilities.guid();
+                localStorage.setItem('playerId', playerID);
+                console.log('Hello new Player (ID: %s)', playerID);
             }
         },
 
