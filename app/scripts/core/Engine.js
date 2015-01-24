@@ -145,7 +145,7 @@ define([
                     return !((tile.x === positionX) && (tile.y === positionY));
                 });
 
-                App.game.updatePoints(App.game.pointList);
+                App.game.updateFirebasePoints(App.game.pointList);
             }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.world, function (sprite, tile) {

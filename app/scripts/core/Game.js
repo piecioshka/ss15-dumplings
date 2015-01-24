@@ -153,7 +153,7 @@ define([
                 var snap = snapshot.val();
 
                 if (snap === null) {
-                    self.updatePoints(Engine.defaultPointList);
+                    self.pointList = Engine.defaultPointList;
                 } else {
                     self.pointList = snap;
                 }
@@ -239,8 +239,7 @@ define([
             this.firebasePlayers.child(player.data.id).update(player.data);
         },
 
-        updatePoints: function (points) {
-            console.log('Game#updatePoints', points);
+        updateFirebasePoints: function (points) {
             this.firebasePoints.set(points);
         },
 
@@ -262,7 +261,7 @@ define([
 
         restore: function () {
             this.pointList = Engine.defaultPointList;
-            this.updatePoints(this.pointList);
+            this.updateFirebasePoints(this.pointList);
             this.restorePlayerPositions();
         }
     };
