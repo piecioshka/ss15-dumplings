@@ -40,7 +40,7 @@ define([
         },
 
         _setupRaft: function () {
-            Engine.raft = App.game.phaser.add.tileSprite(32 * 7, 32 * 8, 32, 32, 'tile-ground', 4);
+            Engine.raft = App.game.phaser.add.tileSprite(32 * 7, 32 * 9, 32, 32, 'tile-ground', 4);
             Engine.raft.name = 'raft';
             App.game.phaser.physics.enable(Engine.raft, Phaser.Physics.ARCADE);
             Engine.raft.body.velocity.x = 120;
@@ -48,9 +48,14 @@ define([
 
         _setupWater: function () {
             Engine.waterGroup = App.game.phaser.add.group();
+            Engine.waterGroup.name = 'water';
+            Engine.waterGroup.enableBody = true;
 
-            _.times(5, function (index) {
-                Engine.waterGroup.add(App.game.phaser.add.tileSprite(32 * (index + 5), 32 * 9, 32, 32, 'tile-ground', 2));
+            _.times(7, function (index) {
+                var waterTile = App.game.phaser.add.tileSprite(32 * (index + 6), 32 * 9, 32, 32, 'tile-ground', 2);
+                waterTile.name = 'drop';
+                Engine.waterGroup.add(waterTile);
+                waterTile.body.immovable = true;
             });
         },
 
@@ -66,6 +71,7 @@ define([
 
         _setupPointGroup: function () {
             Engine.pointGroup = App.game.phaser.add.group();
+            Engine.pointGroup.name = 'points';
             Engine.pointGroup.enableBody = true;
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
@@ -108,9 +114,8 @@ define([
             Engine.cursors = App.game.phaser.input.keyboard.createCursorKeys();
             Engine.jumpButton = App.game.phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-            Engine._setupRaft();
-
             Engine._setupWater();
+            Engine._setupRaft();
             Engine._setupPlayerGroup();
             Engine._setupPointGroup();
         },
@@ -136,8 +141,8 @@ define([
             }
 
             if (Engine.jumpButton.isDown && localPlayer.phaser.body.onFloor() && App.game.phaser.time.now > Engine.jumpTimer) {
-                localPlayer.phaser.body.velocity.y = -350;
-                Engine.jumpTimer = App.game.phaser.time.now - 50;
+                localPlayer.phaser.body.velocity.y = -300;
+                Engine.jumpTimer = App.game.phaser.time.now - 10;
             }
 
             if (localPlayer.firebase.id) {
@@ -167,9 +172,13 @@ define([
             }, null, this);
 
             App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (tileSprite, sprite) {
-                console.log('tileSprite', tileSprite); // tile-ground
-                console.log('sprite', sprite); // tile-monkey
+                // console.log('tileSprite', tileSprite); // tile-ground
+                // console.log('sprite', sprite); // tile-monkey
             }, null, this);
+
+            App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {
+                console.log('topisz się...');
+            });
 
             var currentRaftVelocity = Engine.raft.body.velocity.x;
             App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, tile) {
