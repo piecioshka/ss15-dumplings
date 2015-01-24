@@ -34,10 +34,14 @@ define([
             var snap = snapshot.val();
 
             _.each(_.keys(snap), function (worldID) {
+                var snapWorld = snap[worldID];
+
                 var world = new World();
                 world.setID(worldID);
 
                 self.addWorld(world);
+
+                world.setMap(snapWorld.map);
 
                 world.loadChildren();
             });

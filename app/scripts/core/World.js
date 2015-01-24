@@ -26,6 +26,9 @@ define([
      */
     World.prototype.setMap = function (map) {
         this._map = map;
+        this._fb.update({
+            map: map
+        });
     };
 
     /**
