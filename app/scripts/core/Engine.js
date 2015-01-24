@@ -66,13 +66,12 @@ define([
 
         _setupPointGroup: function () {
             Engine.pointGroup = App.game.phaser.add.group();
-            Engine.pointGroup.name = 'points';
             Engine.pointGroup.enableBody = true;
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
         },
 
         _getPoints: function () {
-            App.game.points.on('value', function (snapshot) {
+            App.game.firebasePoints.on('value', function (snapshot) {
                 Engine.tileList = snapshot.val();
                 // Add points.
 
@@ -122,7 +121,7 @@ define([
             var style = { font: '11px Tahoma', fill: '#000', align: 'left' };
 
             App.game.players.forEach(function (player) {
-                text += player.getName() + ': ' + player.firebase.points + '\n';
+                text += player.getName() + ': ' + player.data.points + '\n';
             });
 
             // App.game.phaser.add.text(960, 0, text, style);
@@ -154,7 +153,7 @@ define([
                 Engine.jumpTimer = App.game.phaser.time.now - 10;
             }
 
-            if (localPlayer.firebase.id) {
+            if (localPlayer.data.id) {
                 App.game.updatePlayer(localPlayer);
             }
         },
