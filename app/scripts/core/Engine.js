@@ -116,11 +116,9 @@ define([
 
             App.game.phaser.physics.arcade.collide(Engine.group, Engine.world);
 
-            /*
-            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tileSprite) {
-                //console.log(Engine.raft);
+            App.game.phaser.physics.arcade.collide(localPlayer.phaser, Engine.raft, function (sprite, tile) {
+                console.log('Raft touch!');
             }, null, this);
-            */
         },
 
         render: function () {
