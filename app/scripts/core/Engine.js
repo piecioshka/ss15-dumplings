@@ -25,12 +25,14 @@ define([
             height: 32
         },
 
-        tileList: [/*
+        tileList: [],
+
+        defaultPointList: [
             { x: 4, y: 1 },
             { x: 8, y: 4 },
             { x: 19, y: 0 },
             { x: 15, y: 3 }
-        */],
+        ],
 
         preload: function () {
             // console.warn('Engine#preload');
@@ -94,7 +96,7 @@ define([
             Engine._setupWorld();
             Engine._setupPoints();
 
-            App.game.createResetPointsHandler();
+            document.querySelector('.reset').addEventListener('click', App.game.restore);
 
             App.game._createPhaserPlayer(App.game.localPlayer);
             App.game.phaser.camera.follow(App.game.localPlayer.phaser);

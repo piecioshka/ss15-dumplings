@@ -17,13 +17,14 @@ define([
     function Game() {
         this.firebasePlayers = undefined;
         this.firebasePoints = undefined;
+        this.firebaseRafts = undefined;
         this.phaser = undefined;
 
         // List of players.
         this.players = [];
         this.localPlayer = undefined;
 
-        _.bindAll(this, 'setupLocalPlayer', 'setupFirebase', 'setupPhaser', 'setupHandlers');
+        _.bindAll(this, 'setupLocalPlayer', 'setupFirebase', 'setupPhaser', 'setupHandlers', 'restore');
 
         this.setupManager = new Scheduler();
         this.setupManager.addTask(this.loadAssets);
@@ -60,6 +61,7 @@ define([
 
             this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebase-players');
             this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/firebase-points');
+            this.firebaseRafts = new Firebase('https://dumplings.firebaseio.com/firebase-rafts');
 
             console.log('Game#setupFirebase');
             p.done();
@@ -185,12 +187,17 @@ define([
         },
 
         updatePlayerPosition: function (params) {
-            // console.log('Game#updatePlayerPosition', params);
+            /// console.log('Game#updatePlayerPosition', params);
+
             _.each(this.players, function (player) {
                 if (player.data.id === params.id) {
                     player.updatePosition(params);
                 }
             }, this);
+
+            if (this.localPlayer.data.id === params.id) {
+                this.localPlayer.updatePosition(params);
+            }
         },
 
         updatePlayer: function (player) {
@@ -208,26 +215,18 @@ define([
             return Storage.get(Game.STORAGE_PLAYER_ID_KEY);
         },
 
-        createResetPointsHandler: function () {
-            var self = this;
+        restore: function () {
+            var playerSettings = Player.DEFAULT_SETTINGS;
 
-            document.querySelector('.reset').addEventListener('click', function () {
-                self.players.forEach(function (player) {
-                    self.firebasePlayers.child(player.data.id).update({
-                        id: player.data.id,
-                        x: 0,
-                        y: 0,
-                        points: 0
-                    });
-                });
+            playerSettings.id = this.localPlayer.data.id;
+            this.firebasePlayers.child(playerSettings.id).update(playerSettings);
 
-                self.firebasePoints.set([
-                    { x: 4, y: 1 },
-                    { x: 8, y: 4 },
-                    { x: 19, y: 0 },
-                    { x: 15, y: 3 }
-                ]);
-            });
+            _.each(this.players, function (player) {
+                playerSettings.id = player.data.id;
+                this.firebasePlayers.child(player.data.id).update(playerSettings);
+            }, this);
+
+            this.firebasePoints.set(Engine.defaultPointList);
         }
     };
     

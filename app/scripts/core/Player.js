@@ -5,12 +5,7 @@ define([
 
     var Player = function () {
         this.phaser = undefined;
-        this.data = {
-            id: undefined,
-            x: 10,
-            y: 10,
-            points: 0
-        };
+        this.data = Player.DEFAULT_SETTINGS;
         this.label = undefined;
     };
 
@@ -27,6 +22,14 @@ define([
 
     Player.prototype.getName = function () {
         return this.data.id.slice(0, 5) + '...';
+    };
+
+
+    Player.DEFAULT_SETTINGS = {
+        id: undefined,
+        x: 0,
+        y: 0,
+        points: 0
     };
 
     return Player;
