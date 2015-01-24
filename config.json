@@ -1,0 +1,13 @@
+{
+    "appDir": "./app",
+    "baseUrl": ".",
+    "dir": "./dist",
+    "mainConfigFile": "./app/scripts/core/main.js",
+    "optimize": "uglify",
+    "optimizeCss": "standard",
+    "preserveLicenseComments": false,
+    "findNestedDependencies": true,
+    "removeCombined": true,
+    "useStrict": true,
+    "logLevel": 2
+}
