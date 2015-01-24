@@ -29,7 +29,7 @@
         App.game = new Game();
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.setupEvents();
-        App.game.loadWorlds();
+        App.game.selectWorld(2);
 
         // Exports
         root.App = App;

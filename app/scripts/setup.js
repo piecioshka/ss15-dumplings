@@ -34,17 +34,26 @@
         game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         game.removeWorlds();
 
-        var world = new World();
-        game.addWorld(world);
+        (function () {
+            var world = new World(1);
+            game.addWorld(world);
 
-        world.setMap('assets/maps/map-1.json');
+            world.setMap('assets/maps/map-1.json');
+            world.addPoint(new Point(0, 0, 1));
+            world.addPlayer(new Player(3, 0));
+        }());
 
-        world.addPoint(new Point(0, 0, 1));
-        world.addPoint(new Point(0, 3, 2));
-        world.addPoint(new Point(0, 6, 4));
+        (function () {
+            var world = new World(2);
+            game.addWorld(world);
 
-        world.addPlayer(new Player(3, 0));
-        world.addPlayer(new Player(3, 3));
-        world.addPlayer(new Player(3, 6));
+            world.setMap('assets/maps/map-2.json');
+
+            world.addPoint(new Point(10, 10, 11));
+            world.addPoint(new Point(10, 13, 12));
+
+            world.addPlayer(new Player(13, 10));
+            world.addPlayer(new Player(13, 13));
+        }());
     });
 }(this));

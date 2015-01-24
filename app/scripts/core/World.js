@@ -8,7 +8,7 @@ define([
 ], function (_, Backbone, Firebase, Utilities, Player, Point) {
     'use strict';
 
-    var World = function () {
+    var World = function (stage) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
 
@@ -17,6 +17,7 @@ define([
         // this._pointsPhaser =
         this._players = {};
         // this._playersPhaser = {};
+        this._stage = stage;
 
         this._fb = undefined;
     };
@@ -25,9 +26,12 @@ define([
      * @param {string} map
      */
     World.prototype.setMap = function (map) {
+        // 1. Aktualizujemy instancję.
         this._map = map;
+        // 2. Aktualizujemy pozycję w Firebase
         this._fb.update({
-            map: map
+            map: map,
+            stage: this._stage
         });
     };
 
@@ -35,6 +39,7 @@ define([
      * @param {Point} point
      */
     World.prototype.addPoint = function (point) {
+        // 1. Aktualizujemy instancję.
         this._points[point.getID()] = point;
         // 2. Dodajemy do grupy Phaser
         // 3. Dodajemy do Firebase
@@ -43,6 +48,9 @@ define([
         point.sync();
     };
 
+    /**
+     * @param {Point} point
+     */
     World.prototype.removePoint = function (point) {
         // 1. Usuwamy obiekt
         point.destroy();
@@ -80,7 +88,7 @@ define([
      * @param {Player} player
      */
     World.prototype.addPlayer = function (player) {
-        // 1. Dodajemy do
+        // 1. Aktualizujemy instancję.
         this._players[player.getID()] = player;
         // 2. Dodajemy do grupy Phaser
         // 3. Dodajemy do Firebase

@@ -17,6 +17,7 @@ define([
      * @param {World} world
      */
     Game.prototype.addWorld = function (world) {
+        // 1. Aktualizujemy instancję.
         this._worlds[world.getID()] = world;
         world.setFirebaseConnection(this._fb.child(world.getID()));
     };
@@ -27,7 +28,7 @@ define([
         });
     };
 
-    Game.prototype.loadWorlds = function () {
+    Game.prototype.selectWorld = function (stage) {
         var self = this;
 
         this._fb.once('value', function (snapshot) {
@@ -36,7 +37,11 @@ define([
             _.each(_.keys(snap), function (worldID) {
                 var snapWorld = snap[worldID];
 
-                var world = new World();
+                if (snapWorld.stage !== stage) {
+                    return;
+                }
+
+                var world = new World(snapWorld.stage);
                 world.setID(worldID);
 
                 self.addWorld(world);
@@ -45,6 +50,10 @@ define([
 
                 world.loadChildren();
             });
+
+            if (!_.size(self._worlds)) {
+                throw new Error('Sorry, we could not load world with stage: ' + stage);
+            }
         });
     };
 
