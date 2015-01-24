@@ -20,6 +20,10 @@ define([
     PointsManager.prototype.updatePointList = function () {
         this.resultsString = 'Points \n';
 
+        // Put point for local player.
+        this.resultsString += (App.game.localPlayer.getName() + ': ' + App.game.localPlayer.data.points + '\n');
+
+        // Put point for rest players.
         _.each(App.game.players, function (player) {
             this.resultsString += (player.getName() + ': ' + player.data.points + '\n');
         }, this);

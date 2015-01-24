@@ -149,17 +149,10 @@ define([
             var p = new promise.Promise();
             var self = this;
 
-            this.firebasePoints.on('value', function (snapshot) {
+            this.firebasePoints.on('child_added', function (snapshot) {
                 var snap = snapshot.val();
-
-                if (snap === null) {
-                    self.pointList = snap;
-                }
-
-                _.each(self.pointList, function (tile) {
-                    var pointTile = this.phaser.add.tileSprite(32 * tile.x, 32 * tile.y, 32, 32, 'tile-ground', 3);
-                    Engine.pointGroup.add(pointTile);
-                }, self);
+                var pointTile = self.phaser.add.tileSprite(32 * snap.x, 32 * snap.y, 32, 32, 'tile-ground', 3);
+                Engine.pointGroup.add(pointTile);
             });
 
             p.done();
