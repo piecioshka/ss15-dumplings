@@ -211,7 +211,16 @@ define([
         createResetPointsHandler: function () {
             var self = this;
 
-            document.querySelector('.resetPoints').addEventListener('click', function () {
+            document.querySelector('.reset').addEventListener('click', function () {
+                self.players.forEach(function (player) {
+                    self.firebasePlayers.child(player.data.id).update({
+                        id: player.data.id,
+                        x: 0,
+                        y: 0,
+                        points: 0
+                    });
+                });
+
                 self.firebasePoints.set([
                     { x: 4, y: 1 },
                     { x: 8, y: 4 },
