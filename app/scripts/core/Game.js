@@ -53,7 +53,7 @@ define([
         setupCommunication: function () {
             var p = new promise.Promise();
 
-            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase-test-test');
+            this.firebase = new Firebase('https://dumplings.firebaseio.com/firebase');
             this.phaser = new Phaser.Game(Game.WIDTH, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
             p.done();
