@@ -70,7 +70,7 @@ define([
             Engine.pointGroup.physicsBodyType = Phaser.Physics.ARCADE;
         },
 
-        _getPoints: function () {
+        _setupPoints: function () {
             App.game.firebasePoints.on('value', function (snapshot) {
                 Engine.tileList = snapshot.val();
                 // Add points.
@@ -80,14 +80,7 @@ define([
                 }
 
                 Engine.tileList.forEach(function (tile) {
-                    Engine.pointGroup.add(App.game.phaser.add.tileSprite(
-                        (Engine.tileSize.width * tile.x),
-                        (Engine.tileSize.height * tile.y),
-                        Engine.tileSize.width,
-                        Engine.tileSize.height,
-                        'tile-ground',
-                        3
-                    ));
+                    Engine.pointGroup.add(App.game.phaser.add.tileSprite((Engine.tileSize.width * tile.x), (Engine.tileSize.height * tile.y), Engine.tileSize.width, Engine.tileSize.height, 'tile-ground', 3));
                 });
             });
         },
@@ -99,8 +92,7 @@ define([
 
             Engine._setupMap();
             Engine._setupWorld();
-
-            Engine._getPoints();
+            Engine._setupPoints();
 
             App.game.createResetPointsHandler();
 
@@ -116,17 +108,6 @@ define([
             Engine._setupPointGroup();
         },
 
-        _pointsManager: function () {
-            var text = '';
-            var style = { font: '11px Tahoma', fill: '#000', align: 'left' };
-
-            App.game.players.forEach(function (player) {
-                text += player.getName() + ': ' + player.data.points + '\n';
-            });
-
-            // App.game.phaser.add.text(960, 0, text, style);
-        },
-
         update: function () {
             // console.warn('Engine#update');
             var localPlayer = App.game.localPlayer;
@@ -137,7 +118,6 @@ define([
             }
 
             Engine._setCollisions();
-            Engine._pointsManager();
 
             // How much different between localPlayer and ground.
             localPlayer.phaser.body.velocity.x = 0;
@@ -166,8 +146,8 @@ define([
                 return;
             }
 
-            App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.pointGroup, function (sprite, tileSprite) {
-                tileSprite.destroy();
+            App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.pointGroup, function (sprite, pointTile) {
+                pointTile.destroy();
 
                 App.game.updatePoints();
 
@@ -175,8 +155,8 @@ define([
                     return;
                 }
 
-                var positionX = tileSprite.x / Engine.tileSize.width;
-                var positionY = tileSprite.y / Engine.tileSize.height;
+                var positionX = pointTile.x / Engine.tileSize.width;
+                var positionY = pointTile.y / Engine.tileSize.height;
 
                 Engine.tileList = Engine.tileList.filter(function (tile) {
                     return !((tile.x === positionX) && (tile.y === positionY));
@@ -189,10 +169,10 @@ define([
                 }
             }, null, this);
 
-            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (player, raft) {
-                player.body.immovable = true;
-                raft.body.velocity.y = player.body.velocity.y = 0;
-                raft.position.y = Math.round(raft.position.y);
+            App.game.phaser.physics.arcade.collide(Engine.playerGroup, Engine.raft, function (playerTile, raftTile) {
+                playerTile.body.immovable = true;
+                raftTile.body.velocity.y = playerTile.body.velocity.y = 0;
+                raftTile.position.y = Math.round(raftTile.position.y);
             }, null, this);
 
             App.game.phaser.physics.arcade.overlap(Engine.playerGroup, Engine.waterGroup, function () {
@@ -200,8 +180,8 @@ define([
             });
 
             var currentRaftVelocity = Engine.raft.body.velocity.x;
-            App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, tile) {
-                if (tile.index === 1) {
+            App.game.phaser.physics.arcade.collide(Engine.raft, Engine.world, function (sprite, worldTile) {
+                if (worldTile.index === 1) {
                     Engine.raft.body.velocity.x = (currentRaftVelocity > 0) ? -120 : 120;
                 }
             }, null, this);

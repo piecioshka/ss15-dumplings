@@ -7,10 +7,11 @@ define([
     'core/Utilities',
     'core/Engine',
     'core/Player',
+    'core/PointsManager',
     'core/helpers/AssetsLoader',
     'core/helpers/Scheduler',
     'core/helpers/Storage'
-], function (Firebase, $, _, Phaser, promise, Utilities, Engine, Player, AssetsLoader, Scheduler, Storage) {
+], function (Firebase, $, _, Phaser, promise, Utilities, Engine, Player, PointsManager, AssetsLoader, Scheduler, Storage) {
     'use strict';
 
     function Game() {
@@ -32,7 +33,8 @@ define([
         this.setupManager.addTask(this.setupHandlers);
 
         this.setupManager.resolveAllTasks(function () {
-            // console.info('Game loaded!');
+            new PointsManager();
+            console.info('Game loaded!');
         });
     }
 
@@ -46,6 +48,7 @@ define([
             ];
 
             AssetsLoader.loadImages(images, function () {
+                console.log('Game#loadAssets');
                 p.done();
             });
 
@@ -58,6 +61,7 @@ define([
             this.firebasePlayers = new Firebase('https://dumplings.firebaseio.com/firebasePlayers');
             this.firebasePoints = new Firebase('https://dumplings.firebaseio.com/points');
 
+            console.log('Game#setupFirebase');
             p.done();
             return p;
         },
@@ -67,6 +71,7 @@ define([
 
             this.phaser = new Phaser.Game(Game.WIDTH + 100, Game.HEIGHT, Phaser.CANVAS, 'playground', Engine);
 
+            console.log('Game#setupPhaser');
             p.done();
             return p;
         },
@@ -85,6 +90,7 @@ define([
             this.localPlayer = new Player();
             this.localPlayer.data.id = playerID;
 
+            console.log('Game#setupLocalPlayer');
             p.done();
             return p;
         },
@@ -124,6 +130,7 @@ define([
                 self.removePlayerById(snap.id);
             });
 
+            console.log('Game#setupHandlers');
             p.done();
             return p;
         },
