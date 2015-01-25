@@ -29,6 +29,11 @@ define([
     };
 
     Player.LABEL_DISTANCE = 18;
+    Player.LABEL_STYLE = {
+        font: '11px Tahoma',
+        fill: '#F00',
+        align: 'center'
+    };
 
     /**
      * @returns {string}
@@ -157,11 +162,7 @@ define([
         this._phaser.y = this.y;
 
         //TODO: Change slice to call function which render nick.
-        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), (this._id.slice(0, 5) + '...'), {
-            font: '11px Tahoma',
-            fill: '#F00',
-            align: 'center'
-        });
+        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), (this._id.slice(0, 5) + '...'), LABEL_STYLE);
 
         var localPlayerID = Storage.get(Player.STORAGE_KEY);
 
