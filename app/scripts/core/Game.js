@@ -183,7 +183,11 @@ define([
             }
         }
 
-        map.addPlayer(localPlayer);
+        // Może się jeszcze nie stworzył?
+        if (localPlayer) {
+            map.addPlayer(localPlayer);
+        }
+
         map.render(this._phaser);
     };
 
@@ -219,7 +223,7 @@ define([
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
 
-        var bg = this._phaser.add.tileSprite(0, 0, 1400, 900, 'background');
+        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, 'background');
         bg.fixedToCamera = true;
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
