@@ -51,7 +51,7 @@ define([
             this._fb.child(mapID + '/points').on('child_removed', function (snapshot) {
                 var snap = snapshot.val();
                 var pointInstance = map.getPointByID(snap.id);
-                map.removePoint(pointInstance, true);
+                map.removeScorePoint(pointInstance, true);
             });
 
             // ---------------------------------------------------------------------------------------------------------
@@ -255,10 +255,9 @@ define([
         }
 
         this.__cachedArcade.collide(map._playersPhaser, map._worldPhaser);
-        this.__cachedArcade.collide(map._playersPhaser, map._playersPhaser);
-        this.__cachedArcade.overlap(map._playersPhaser, map._pointsPhaser, function (player, point) {
-            var pointInstance = map.getPointByID(point.id);
-            map.removePoint(pointInstance);
+        this.__cachedArcade.overlap(map._playersPhaser, map._scorePointsPhaser, function (player, scorePoint) {
+            var pointInstance = map.getPointByID(scorePoint.id);
+            map.removeScorePoint(pointInstance);
 
             if (player.id === localPlayerInstance.getID()) {
                 localPlayerInstance.addCollectedPoints(pointInstance);
@@ -266,7 +265,7 @@ define([
         });
 
         // Żeby punkty trzymały sie ziemi.
-        this.__cachedArcade.collide(map._pointsPhaser, map._worldPhaser);
+        this.__cachedArcade.collide(map._scorePointsPhaser, map._worldPhaser);
     };
 
     Game.prototype.start = function () {

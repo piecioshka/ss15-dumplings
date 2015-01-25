@@ -140,19 +140,19 @@ define([
     };
 
     /**
-     * @param {Point} point
+     * @param {ScorePoint} scorePoint
      * @param {boolean} [silent=false]
      */
-    Player.prototype.addCollectedPoints = function (point, silent) {
+    Player.prototype.addCollectedPoints = function (scorePoint, silent) {
         // 1. Aktualizacja instancji
-        this._score += point.getValue();
+        this._score += scorePoint.getValue();
 
         if (silent) return;
 
         // 2. Synchronizacja z Firebase
         this.sync();
 
-        // console.info('Player #%s add points: %s. Current collected points: ', this._id, point.getValue(), this._score);
+        // console.info('Player #%s add points: %s. Current collected points: ', this._id, scorePoint.getValue(), this._score);
     };
 
     /**

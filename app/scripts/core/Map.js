@@ -6,8 +6,8 @@ define([
     'core/Utilities',
     'core/Storage',
     'core/Player',
-    'core/Point'
-], function (_, Backbone, Firebase, Phaser, Utilities, Storage, Player, Point) {
+    'core/ScorePoint'
+], function (_, Backbone, Firebase, Phaser, Utilities, Storage, Player, ScorePoint) {
     'use strict';
 
     /**
@@ -21,8 +21,8 @@ define([
         this._path = '';
         this._stage = stage;
 
-        this._points = {};
-        this._pointsPhaser = undefined;
+        this._scorePoints = {};
+        this._scorePointsPhaser = undefined;
 
         this._players = {};
         this._playersPhaser = undefined;
@@ -51,33 +51,33 @@ define([
     };
 
     /**
-     * @param {Point} point
+     * @param {ScorePoint} scorePoint
      */
-    Map.prototype.addPoint = function (point) {
-        // console.log('Map#addPoint', point);
+    Map.prototype.addScorePoint = function (scorePoint) {
+        // console.log('Map#addScorePoint', scorePoint);
         // 1. Aktualizujemy instancję.
-        this._points[point.getID()] = point;
+        this._scorePoints[scorePoint.getID()] = scorePoint;
         // 2. Dodajemy do grupy Phaser
         // 3. Ustawiamy połączenie Firebase
-        point.setFirebaseConnection(this._fb.child('/points/' + point.getID()));
+        scorePoint.setFirebaseConnection(this._fb.child('/score-points/' + scorePoint.getID()));
         // 4. Aktualizujemy pozycję w Firebase
-        point.sync();
+        scorePoint.sync();
     };
 
     /**
-     * @param {Point} point
+     * @param {ScorePoint} scorePoint
      * @param {boolean} [silent=false]
      */
-    Map.prototype.removePoint = function (point, silent) {
-        // console.log('Map#removePoint', point, silent);
+    Map.prototype.removeScorePoint = function (scorePoint, silent) {
+        // console.log('Map#removeScorePoint', scorePoint, silent);
         // 1. Usuwamy obiekt
         try {
-            point.destroy(silent);
+            scorePoint.destroy(silent);
         } catch (e) {
-            console.log('Map#removePoint');
+            console.log('Map#removeScorePoint');
         }
         // 2. Usuwamy go z listy.
-        delete this._points[point.getID()];
+        delete this._scorePoints[scorePoint.getID()];
     };
 
     /**
@@ -103,10 +103,10 @@ define([
             _.each(snap.points, function (remotePoint, pointID) {
                 var snapPoints = snap.points[pointID];
 
-                var point = new Point(snapPoints.x, snapPoints.y, snapPoints.value, snapPoints.figure);
-                point.setID(pointID);
+                var scorePoint = new ScorePoint(snapPoints.x, snapPoints.y, snapPoints.value, snapPoints.figure);
+                scorePoint.setID(pointID);
 
-                self.addPoint(point);
+                self.addScorePoint(scorePoint);
             });
 
             if (_.isFunction(cb)) {
@@ -172,10 +172,10 @@ define([
 
     /**
      * @param {string} id
-     * @returns {Point}
+     * @returns {ScorePoint}
      */
     Map.prototype.getPointByID = function (id) {
-        return _.findWhere(this._points, { _id: id });
+        return _.findWhere(this._scorePoints, { _id: id });
     };
 
     /**
@@ -210,12 +210,12 @@ define([
         localPlayerInstance.setCameraOnIt(phaser);
 
         // 5. Tworzymy grupę points-ów
-        this._pointsPhaser = phaser.add.group();
-        this._pointsPhaser.enableBody = true;
-        this._pointsPhaser.physicsBodyType = Phaser.Physics.ARCADE;
+        this._scorePointsPhaser = phaser.add.group();
+        this._scorePointsPhaser.enableBody = true;
+        this._scorePointsPhaser.physicsBodyType = Phaser.Physics.ARCADE;
 
         // 6. Renderujemy punkty-ów.
-        _.invoke(this._points, 'render', phaser, this._pointsPhaser);
+        _.invoke(this._scorePoints, 'render', phaser, this._scorePointsPhaser);
     };
 
     /**

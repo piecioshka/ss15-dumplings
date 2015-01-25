@@ -10,16 +10,16 @@ define([
      * @param {number} x
      * @param {number} y
      * @param {number} [value=1]
-     * @param {string} [figure=Point.ANGULAR]
+     * @param {string} [figure=ScorePoint.ANGULAR]
      * @constructor
      */
-    var Point = function (x, y, value, figure) {
+    var ScorePoint = function (x, y, value, figure) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
         this.x = x;
         this.y = y;
         this._value = value || 1;
-        this._figure = figure || Point.ANGULAR;
+        this._figure = figure || ScorePoint.ANGULAR;
 
         this._phaser = undefined;
         this._fb = undefined;
@@ -28,30 +28,30 @@ define([
     /**
      * @returns {string}
      */
-    Point.prototype.getID = function () {
+    ScorePoint.prototype.getID = function () {
         return this._id;
     };
 
     /**
      * @param {number} id
      */
-    Point.prototype.setID = function (id) {
+    ScorePoint.prototype.setID = function (id) {
         this._id = id;
     };
 
-    Point.prototype.setFigure = function (figure) {
+    ScorePoint.prototype.setFigure = function (figure) {
         this._figure = figure;
     };
 
     /**
      * @param {boolean} [silent=false]
      */
-    Point.prototype.destroy = function (silent) {
+    ScorePoint.prototype.destroy = function (silent) {
         // 1. Usunąć z Phaser.
         try {
             this._phaser.destroy();
         } catch (e) {
-            console.log('Point#destroy');
+            console.log('ScorePoint#destroy');
         }
 
         if (silent) return;
@@ -63,12 +63,12 @@ define([
     /**
      * @returns {number}
      */
-    Point.prototype.getValue = function () {
+    ScorePoint.prototype.getValue = function () {
         return this._value;
     };
 
-    Point.prototype.sync = function () {
-        // console.log('Point#sync');
+    ScorePoint.prototype.sync = function () {
+        // console.log('ScorePoint#sync');
         this._fb.update({
             id: this._id,
             x: this.x,
@@ -81,12 +81,12 @@ define([
     /**
      * @param {Firebase} connection
      */
-    Point.prototype.setFirebaseConnection = function (connection) {
+    ScorePoint.prototype.setFirebaseConnection = function (connection) {
         this._fb = connection;
     };
 
-    Point.prototype.render = function (phaser, pointsPhaser) {
-        // console.log('Point#render');
+    ScorePoint.prototype.render = function (phaser, pointsPhaser) {
+        // console.log('ScorePoint#render');
         this._phaser = phaser.add.tileSprite(this.x, this.y, 32, 32, this._figure, 3);
         this._phaser.id = this._id;
 
@@ -101,12 +101,12 @@ define([
         pointsPhaser.add(this._phaser);
     };
 
-    Point.ANGULAR = 'tool-angular';
-    Point.BOOTSTRAP = 'tool-bootstrap';
-    Point.CSS3 = 'tool-css3';
-    Point.GULP = 'tool-gulp';
-    Point.HTML5 = 'tool-html5';
-    Point.SASS = 'tool-sass';
+    ScorePoint.ANGULAR = 'tool-angular';
+    ScorePoint.BOOTSTRAP = 'tool-bootstrap';
+    ScorePoint.CSS3 = 'tool-css3';
+    ScorePoint.GULP = 'tool-gulp';
+    ScorePoint.HTML5 = 'tool-html5';
+    ScorePoint.SASS = 'tool-sass';
 
-    return Point;
+    return ScorePoint;
 });
