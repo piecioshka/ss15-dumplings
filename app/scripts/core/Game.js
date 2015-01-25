@@ -1,13 +1,15 @@
 define([
     'lodash',
     'backbone',
-    'core/World'
-], function (_, Backbone, World) {
+    'core/World',
+    'core/Player'
+], function (_, Backbone, World, Player) {
     'use strict';
 
     var Game = function () {
         _.extend(this, Backbone.Events);
         this._worlds = {};
+        this._selectedWorldID = undefined;
         this._fb = undefined;
 
         console.info('Game was created at: %s', new Date());
@@ -28,7 +30,7 @@ define([
         });
     };
 
-    Game.prototype.selectWorld = function (stage) {
+    Game.prototype.fetchWorlds = function (cb) {
         var self = this;
 
         this._fb.once('value', function (snapshot) {
@@ -37,24 +39,35 @@ define([
             _.each(_.keys(snap), function (worldID) {
                 var snapWorld = snap[worldID];
 
-                if (snapWorld.stage !== stage) {
-                    return;
-                }
-
                 var world = new World(snapWorld.stage);
                 world.setID(worldID);
+                world.setMap(snapWorld.map, true);
 
                 self.addWorld(world);
-
-                world.setMap(snapWorld.map);
-
-                world.loadChildren();
             });
 
-            if (!_.size(self._worlds)) {
-                throw new Error('Sorry, we could not load world with stage: ' + stage);
+            if (_.isFunction(cb)) {
+                cb();
             }
         });
+    };
+
+    Game.prototype.selectWorld = function (stage) {
+        delete this._selectedWorldID;
+
+        _.each(_.keys(this._worlds), function (worldID) {
+            var world = this._worlds[worldID];
+
+            if (world.getStage() !== stage) {
+                return;
+            }
+
+            this._selectedWorldID = worldID;
+        }, this);
+
+        if (!this._selectedWorldID) {
+            throw new Error('Sorry, we could not load world with stage: ' + stage);
+        }
     };
 
     Game.prototype.removeWorlds = function () {
@@ -65,7 +78,11 @@ define([
         });
     };
 
-    Game.prototype.renderWorld = function (world) {
+    Game.prototype.renderSelectedWorld = function () {
+        var world = this._worlds[this._selectedWorldID];
+        world.loadChildren();
+
+        world.addPlayer(new Player(5, 5));
         world.render();
     };
 

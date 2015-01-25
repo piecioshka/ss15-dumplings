@@ -24,10 +24,14 @@ define([
 
     /**
      * @param {string} map
+     * @param {boolean} [silent=false]
      */
-    World.prototype.setMap = function (map) {
+    World.prototype.setMap = function (map, silent) {
         // 1. Aktualizujemy instancję.
         this._map = map;
+
+        if (silent) return;
+
         // 2. Aktualizujemy pozycję w Firebase
         this._fb.update({
             map: map,
@@ -113,6 +117,13 @@ define([
 
     World.prototype.setID = function (id) {
         this._id = id;
+    };
+
+    /**
+     * @returns {number}
+     */
+    World.prototype.getStage = function () {
+        return this._stage;
     };
 
     /**
