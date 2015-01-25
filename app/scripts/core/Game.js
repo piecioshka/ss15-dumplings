@@ -40,10 +40,49 @@ define([
     };
 
     Game.prototype.setupEvents = function () {
-        // Jeśli usunęliśmy jakiś świat z gry, to restartujemy całą gre.
+        var self = this;
+
+        // Jeśli usunęliśmy dowolną mapę z gry, to restartujemy całą gre.
         this._fb.on('child_removed', function () {
             location.reload(true);
         });
+
+        _.each(this._maps, function (map, mapID) {
+            this._fb.child(mapID + '/points').on('child_removed', function (snapshot) {
+                var snap = snapshot.val();
+                var pointInstance = map.getPointByID(snap.id);
+                map.removePoint(pointInstance, true);
+            });
+
+            // ---------------------------------------------------------------------------------------------------------
+
+            this._fb.child(mapID + '/players').on('child_added', function (snapshot) {
+                var snap = snapshot.val();
+                var playerInstance = map.getPlayerByID(snap.id);
+
+                if (!playerInstance) {
+                    playerInstance = new Player(snap.x, snap.y);
+                    playerInstance.setID(snap.id);
+                    playerInstance.render(self._phaser, map._playersPhaser);
+                    map.addPlayer(playerInstance);
+                }
+            });
+
+            this._fb.child(mapID + '/players').on('child_removed', function (snapshot) {
+                var snap = snapshot.val();
+                var playerInstance = map.getPlayerByID(snap.id);
+                map.removePlayer(playerInstance);
+            });
+
+            this._fb.child(mapID + '/players').on('child_changed', function (snapshot) {
+                var snap = snapshot.val();
+                var playerInstance = map.getPlayerByID(snap.id);
+                if (playerInstance) {
+                    playerInstance.setPosition(snap.x, snap.y, true);
+                    playerInstance.setScore(snap.score);
+                }
+            });
+        }, this);
     };
 
     /**
@@ -104,10 +143,10 @@ define([
             var map = this._maps[this._selectedMapID];
 
             if (map) {
-                var player = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+                var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
-                if (player) {
-                    map.removePlayer(player);
+                if (localPlayerInstance) {
+                    map.removePlayer(localPlayerInstance);
                 }
             }
         }
@@ -124,7 +163,7 @@ define([
     Game.prototype.renderSelectedMap = function () {
         var map = this._maps[this._selectedMapID];
         var playerID = Storage.get(Player.STORAGE_KEY);
-        var localPlayer = new Player(5, 5);
+        var localPlayer = new Player(_.random(30, 90), 194);
 
         if (_.isEmpty(playerID)) {
             Storage.put(Player.STORAGE_KEY, localPlayer.getID());
@@ -165,30 +204,32 @@ define([
     Game.prototype.update = function () {
         // console.log('Game#update');
         var map = this._maps[this._selectedMapID];
-        var localPlayer = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+        var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
         // Może ktoś wyczyścił storage?
-        if (localPlayer) {
+        if (localPlayerInstance) {
             this.setupCollisions();
-            localPlayer.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
+            localPlayerInstance.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
         }
     };
 
     Game.prototype.setupCollisions = function () {
         // console.log('Game#setupCollisions');
         var map = this._maps[this._selectedMapID];
-        var localPlayer = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+        var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
-        this._phaser.physics.arcade.collide(map._worldPhaser, map._playersPhaser);
-        this._phaser.physics.arcade.collide(map._worldPhaser, map._pointsPhaser);
-        this._phaser.physics.arcade.collide(map._playersPhaser, map._pointsPhaser, function (player, point) {
+        this._phaser.physics.arcade.collide(map._playersPhaser, map._worldPhaser);
+        this._phaser.physics.arcade.overlap(map._playersPhaser, map._pointsPhaser, function (player, point) {
             var pointInstance = map.getPointByID(point.id);
             map.removePoint(pointInstance);
 
-            if (player.id === localPlayer.getID()) {
-                localPlayer.addCollectedPoints(pointInstance);
+            if (player.id === localPlayerInstance.getID()) {
+                localPlayerInstance.addCollectedPoints(pointInstance);
             }
         });
+
+        // Żeby punkty trzymały sie ziemi.
+        this._phaser.physics.arcade.collide(map._pointsPhaser, map._worldPhaser);
     };
 
     Game.prototype.start = function () {

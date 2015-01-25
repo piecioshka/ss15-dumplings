@@ -66,11 +66,12 @@ define([
 
     /**
      * @param {Point} point
+     * @param {boolean} [silent=false]
      */
-    Map.prototype.removePoint = function (point) {
-        // console.log('Map#removePoint', point);
+    Map.prototype.removePoint = function (point, silent) {
+        // console.log('Map#removePoint', point, silent);
         // 1. Usuwamy obiekt
-        point.destroy();
+        point.destroy(silent);
         // 2. Usuwamy go z listy.
         delete this._points[point.getID()];
     };
@@ -195,8 +196,8 @@ define([
         _.invoke(this._players, 'render', phaser, this._playersPhaser);
 
         // 4. Kamera na graczu lokalnym.
-        var localPlayer = this.getPlayerByID(Storage.get(Player.STORAGE_KEY));
-        localPlayer.setCameraOnIt(phaser);
+        var localPlayerInstance = this.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+        localPlayerInstance.setCameraOnIt(phaser);
 
         // 5. Tworzymy grupę points-ów
         this._pointsPhaser = phaser.add.group();

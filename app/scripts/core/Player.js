@@ -40,8 +40,9 @@ define([
     };
 
     Player.prototype.destroy = function () {
-        console.log('Player#destroy');
+        // console.log('Player#destroy');
         // 1. Usunąć z Phaser.
+        this._phaser.destroy();
         // 2. Usuwamy playera ze storage-a
         Storage.del(Player.STORAGE_KEY);
         // 3. Usuwamy z Firebase
@@ -49,8 +50,10 @@ define([
     };
 
     Player.prototype.sync = function () {
+        // console.log('Player#sync');
         // 1. Wysłać do Firebase
         this._fb.update({
+            id: this._id,
             x: this.x,
             y: this.y,
             score: this._score
@@ -63,14 +66,28 @@ define([
      * @param {boolean} [silent=false]
      */
     Player.prototype.setPosition = function (x, y, silent) {
+        // console.log('Player#setPosition', x, y, silent);
+        var isPositionChanged = (this.x !== x) || (this.y !== y);
+        // console.log('isPositionChanged', isPositionChanged);
+
         // 1. Aktualizacja instancji
         this.x = x;
         this.y = y;
 
-        if (silent) return;
-
-        // 2. Uruchomienie zdarzenia `change:position`.
-        this.trigger(Player.EVENTS.CHANGE_POSITION);
+        if (silent) {
+            // 2. Aktualizacja na Phaser
+            if (this._phaser) {
+                // Jeśli player został wyrenderowany.
+                this._phaser.x = x;
+                this._phaser.y = y;
+            }
+        } else {
+            // 2. Aktualizacja w Firebase
+            if (isPositionChanged) {
+                // Jeśli pozycja playera się zmieni.
+                this.sync();
+            }
+        }
     };
 
     /**
@@ -86,7 +103,15 @@ define([
         // 2. Synchronizacja z Firebase
         this.sync();
 
-        console.info('Player #%s add points: %s. Current collected points: ', this._id, point.getValue(), this._score);
+        // console.info('Player #%s add points: %s. Current collected points: ', this._id, point.getValue(), this._score);
+    };
+
+    /**
+     * @param {number} score
+     */
+    Player.prototype.setScore = function (score) {
+        // 1. Aktualizacja instancji
+        this._score = score;
     };
 
     /**
@@ -102,7 +127,7 @@ define([
 
     Player.prototype.render = function (phaser, playersPhaser) {
         // console.log('Player#render');
-        this._phaser = phaser.add.sprite(32 * this.x, 32 * this.y, 'tile-monkey');
+        this._phaser = phaser.add.sprite(this.x, this.y, 'tile-monkey');
         this._phaser.id = this._id;
 
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
@@ -129,13 +154,9 @@ define([
         if (jumpButton.isDown && this._phaser.body.onFloor()) {
             this._phaser.body.velocity.y = -300;
         }
-    };
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    Player.EVENTS = {
-        CHANGE_POSITION: 'change:position',
-        ADD_POINTS: 'add:points'
+        // 2. Aktualizacja w Firebase
+        this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
 
     Player.STORAGE_KEY = 'ss15-dumplings-player';

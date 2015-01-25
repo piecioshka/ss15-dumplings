@@ -30,7 +30,7 @@
         'core/Player'
     ], function (Firebase, App, Game, Map, Point, Player) {
         App.game = new Game();
-        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-new'));
         App.game.removeMaps();
 
         (function () {
@@ -39,9 +39,9 @@
 
             map.setPath('assets/maps/map-1.json');
 
-            map.addPoint(new Point(10, 0, 1));
-            map.addPoint(new Point(24, 2, 3));
-            map.addPoint(new Point(8, 4, 7));
+            map.addPoint(new Point(10 * 32, 0, 1));
+            map.addPoint(new Point(24 * 32, 2 * 32, 3));
+            map.addPoint(new Point(8 * 32, 4 * 32, 7));
 
             // map.addPlayer(new Player(3, 0));
         }());
@@ -52,8 +52,8 @@
 
             map.setPath('assets/maps/map-2.json');
 
-            map.addPoint(new Point(10, 10, 11));
-            map.addPoint(new Point(10, 13, 12));
+            map.addPoint(new Point(10 * 32, 10 * 32, 11));
+            map.addPoint(new Point(10 * 32, 13 * 32, 12));
 
             // map.addPlayer(new Player(13, 10));
             // map.addPlayer(new Player(13, 13));
