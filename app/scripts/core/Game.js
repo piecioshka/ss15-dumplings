@@ -167,6 +167,18 @@ define([
         var world = this._worlds[this._selectedWorldID];
         var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
         localPlayer.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
+
+        this.setupCollisions();
+    };
+
+    Game.prototype.setupCollisions = function () {
+        // console.log('Game#setupCollisions');
+        var world = this._worlds[this._selectedWorldID];
+        var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+        this._phaser.physics.arcade.collide(localPlayer._phaser, world._phaser, function () {
+            console.log.apply(console, arguments);
+        });
     };
 
     Game.prototype.start = function () {
