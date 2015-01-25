@@ -87,11 +87,20 @@ define([
     Player.prototype.destroy = function () {
         // console.log('Player#destroy');
         // 1. Usunąć z Phaser.
-        this._phaser.destroy();
+        if (this._phaser) {
+            // Może się jeszcze nie wyrenderował (ktoś kliknął Anuluj).
+            this._phaser.destroy();
+        }
         // 2. Usunąć label z Phaser-a
-        this._label.destroy();
+        if (this._label) {
+            // Może się jeszcze nie wyrenderował (ktoś kliknął Anuluj).
+            this._label.destroy();
+        }
         // 3. Usuwamy z Firebase
-        this._fb.remove();
+        if (this._fb) {
+            // Może się jeszcze nie wyrenderował (ktoś kliknął Anuluj).
+            this._fb.remove();
+        }
     };
 
     Player.prototype.sync = function () {

@@ -134,7 +134,10 @@ define([
     Map.prototype.removePlayer = function (player) {
         // console.log('Map#removePlayer', player);
         // 1. Usuwać z grupy Phasera
-        this._playersPhaser.removeChild(player);
+        if (this._playersPhaser) {
+            // Może się jeszcze nie wyrenderował (ktoś kliknął Anuluj).
+            this._playersPhaser.removeChild(player);
+        }
         // 2. Usuwamy go z listy.
         delete this._players[player.getID()];
         // 3. Usuwamy obiekt

@@ -202,6 +202,7 @@ define([
             if (localPlayer.isDefaultName()) {
                 var nick = prompt(Game.MSG_GET_NICK);
                 if (!nick) {
+                    map.removePlayer(localPlayer);
                     Storage.del(Player.STORAGE_KEY);
                     location.reload(true);
                 }
