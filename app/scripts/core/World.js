@@ -169,6 +169,8 @@ define([
         this._phaser.setCollision([1, 2, 4]);
 
         this._phaser.createLayer('Tile Layer 1');
+
+        _.invoke(this._players, 'render', phaser);
     };
 
     /**

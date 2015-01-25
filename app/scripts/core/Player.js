@@ -1,9 +1,10 @@
 define([
     'lodash',
     'backbone',
+    'phaser',
     'core/Utilities',
     'core/Storage'
-], function (_, Backbone, Utilities, Storage) {
+], function (_, Backbone, Phaser, Utilities, Storage) {
     'use strict';
 
     /**
@@ -90,6 +91,17 @@ define([
      */
     Player.prototype.setFirebaseConnection = function (connection) {
         this._fb = connection;
+    };
+
+    Player.prototype.render = function (phaser) {
+        console.log('Player#render', phaser);
+        this._phaser = phaser.add.sprite(0, 32 * 8, 'tile-monkey');
+        phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
+
+        this._phaser.body.bounce.y = 0;
+        this._phaser.body.collideWorldBounds = true;
+        this._phaser.body.setSize(12, 28, 10, 2);
+        this._phaser.body.gravity.y = 350;
     };
 
     // -----------------------------------------------------------------------------------------------------------------

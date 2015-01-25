@@ -20,11 +20,11 @@ define([
             create: this.render.bind(this),
 
             update: function () {
-                console.log('update');
+                // console.log('update');
             },
 
             render: function () {
-                console.log('render');
+                // console.log('render');
             }
         });
 
