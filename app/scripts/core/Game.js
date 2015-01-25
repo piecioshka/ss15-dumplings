@@ -15,7 +15,7 @@ define([
         this._worlds = {};
         this._selectedWorldID = undefined;
         this._fb = undefined;
-        this._phaser = new Phaser.Game(Configuration.WINDOW_WIDTH, Configuration.WINDOW_HEIGHT, Phaser.CANVAS, 'playground');
+        this._phaser = new Phaser.Game(Configuration.WORLD_WIDTH, Configuration.WORLD_HEIGHT, Phaser.CANVAS, 'playground');
         this._phaser.state.add('Bootstrap', {
             preload: this.preload.bind(this),
             create: this.create.bind(this),
