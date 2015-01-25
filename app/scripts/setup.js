@@ -29,7 +29,7 @@
         'core/ScorePoint'
     ], function (Firebase, App, Game, Map, ScorePoint) {
         App.game = new Game();
-        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-pk'));
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.removeMaps();
 
         (function () {
