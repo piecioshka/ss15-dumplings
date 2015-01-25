@@ -39,7 +39,9 @@
             game.addWorld(world);
 
             world.setMap('assets/maps/map-1.json');
+
             world.addPoint(new Point(0, 0, 1));
+
             world.addPlayer(new Player(3, 0));
         }());
 

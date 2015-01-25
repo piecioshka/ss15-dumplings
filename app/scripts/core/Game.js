@@ -1,9 +1,10 @@
 define([
     'lodash',
     'backbone',
+    'promise',
     'core/World',
     'core/Player'
-], function (_, Backbone, World, Player) {
+], function (_, Backbone, promise, World, Player) {
     'use strict';
 
     var Game = function () {
@@ -36,7 +37,10 @@ define([
         this._fb.once('value', function (snapshot) {
             var snap = snapshot.val();
 
+            var callbacks = [];
+
             _.each(_.keys(snap), function (worldID) {
+                var p = new promise.Promise();
                 var snapWorld = snap[worldID];
 
                 var world = new World(snapWorld.stage);
@@ -44,11 +48,15 @@ define([
                 world.setMap(snapWorld.map, true);
 
                 self.addWorld(world);
+
+                world.loadChildren(function () {
+                    p.done();
+                });
+
+                callbacks.push(p);
             });
 
-            if (_.isFunction(cb)) {
-                cb();
-            }
+            promise.join(callbacks).then(cb);
         });
     };
 
@@ -80,8 +88,6 @@ define([
 
     Game.prototype.renderSelectedWorld = function () {
         var world = this._worlds[this._selectedWorldID];
-        world.loadChildren();
-
         world.addPlayer(new Player(5, 5));
         world.render();
     };

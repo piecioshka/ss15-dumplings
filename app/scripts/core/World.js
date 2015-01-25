@@ -62,7 +62,7 @@ define([
         delete this._points[point.getID()];
     };
 
-    World.prototype.loadChildren = function () {
+    World.prototype.loadChildren = function (cb) {
         var self = this;
 
         this._fb.once('value', function (snapshot) {
@@ -85,6 +85,10 @@ define([
 
                 self.addPoint(point);
             });
+
+            if (_.isFunction(cb)) {
+                cb();
+            }
         });
     };
 
