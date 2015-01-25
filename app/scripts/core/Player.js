@@ -1,8 +1,9 @@
 define([
     'lodash',
     'backbone',
-    'core/Utilities'
-], function (_, Backbone, Utilities) {
+    'core/Utilities',
+    'core/Storage'
+], function (_, Backbone, Utilities, Storage) {
     'use strict';
 
     var Player = function (x, y) {
@@ -30,7 +31,12 @@ define([
     };
 
     Player.prototype.destroy = function () {
+        console.log('Player#destroy');
         // 1. Usunąć z Phaser.
+        // 2. Usuwamy playera ze storage-a
+        Storage.del(Player.STORAGE_KEY);
+        // 3. Usuwamy z Firebase
+        this._fb.remove();
     };
 
     Player.prototype.sync = function () {
@@ -80,6 +86,8 @@ define([
     Player.EVENTS = {
         CHANGE_POSITION: 'change:position'
     };
+
+    Player.STORAGE_KEY = 'ss15-dumplings-player';
 
     return Player;
 });

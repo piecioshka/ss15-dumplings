@@ -43,6 +43,7 @@ define([
      * @param {Point} point
      */
     World.prototype.addPoint = function (point) {
+        console.log('World#addPoint', point);
         // 1. Aktualizujemy instancję.
         this._points[point.getID()] = point;
         // 2. Dodajemy do grupy Phaser
@@ -56,6 +57,7 @@ define([
      * @param {Point} point
      */
     World.prototype.removePoint = function (point) {
+        console.log('World#removePoint', point);
         // 1. Usuwamy obiekt
         point.destroy();
         // 2. Usuwamy go z listy.
@@ -96,6 +98,7 @@ define([
      * @param {Player} player
      */
     World.prototype.addPlayer = function (player) {
+        console.log('World#addPlayer', player);
         // 1. Aktualizujemy instancję.
         this._players[player.getID()] = player;
         // 2. Dodajemy do grupy Phaser
@@ -106,6 +109,7 @@ define([
     };
 
     World.prototype.removePlayer = function (player) {
+        console.log('World#removePlayer', player);
         // 1. Usuwamy obiekt
         player.destroy();
         // 2. Usuwamy go z listy.
@@ -131,6 +135,14 @@ define([
     };
 
     /**
+     * @param {string} playerID
+     * @returns {Player}
+     */
+    World.prototype.getPlayerByID = function (playerID) {
+        return this._players[playerID];
+    };
+
+    /**
      * @param {Firebase} connection
      */
     World.prototype.setFirebaseConnection = function (connection) {
@@ -138,7 +150,14 @@ define([
     };
 
     World.prototype.render = function () {
-        // 1.
+        // 1. Coś z Phaserem
+    };
+
+    /**
+     * @returns {Object}
+     */
+    World.prototype.getPlayers = function () {
+        return this._players;
     };
 
     return World;

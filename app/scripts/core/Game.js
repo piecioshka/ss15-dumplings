@@ -3,8 +3,9 @@ define([
     'backbone',
     'promise',
     'core/World',
-    'core/Player'
-], function (_, Backbone, promise, World, Player) {
+    'core/Player',
+    'core/Storage'
+], function (_, Backbone, promise, World, Player, Storage) {
     'use strict';
 
     var Game = function () {
@@ -20,6 +21,7 @@ define([
      * @param {World} world
      */
     Game.prototype.addWorld = function (world) {
+        console.log('Game#addWorld', world);
         // 1. Aktualizujemy instancję.
         this._worlds[world.getID()] = world;
         world.setFirebaseConnection(this._fb.child(world.getID()));
@@ -61,6 +63,8 @@ define([
     };
 
     Game.prototype.selectWorld = function (stage) {
+        var cachedSelectedWorldID = this._selectedWorldID;
+
         delete this._selectedWorldID;
 
         _.each(_.keys(this._worlds), function (worldID) {
@@ -76,6 +80,18 @@ define([
         if (!this._selectedWorldID) {
             throw new Error('Sorry, we could not load world with stage: ' + stage);
         }
+
+        if (cachedSelectedWorldID && cachedSelectedWorldID !== this._selectedWorldID) {
+            var world = this._worlds[this._selectedWorldID];
+
+            if (world) {
+                var player = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+                if (player) {
+                    world.removePlayer(player);
+                }
+            }
+        }
     };
 
     Game.prototype.removeWorlds = function () {
@@ -88,7 +104,16 @@ define([
 
     Game.prototype.renderSelectedWorld = function () {
         var world = this._worlds[this._selectedWorldID];
-        world.addPlayer(new Player(5, 5));
+        var playerID = Storage.get(Player.STORAGE_KEY);
+        var localPlayer = new Player(5, 5);
+
+        if (_.isEmpty(playerID)) {
+            Storage.put(Player.STORAGE_KEY, localPlayer.getID());
+        } else {
+            localPlayer.setID(playerID);
+        }
+
+        world.addPlayer(localPlayer);
         world.render();
     };
 
