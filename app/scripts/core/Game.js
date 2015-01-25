@@ -205,6 +205,7 @@ define([
                     map.removePlayer(localPlayer);
                     Storage.del(Player.STORAGE_KEY);
                     location.reload(true);
+                    return;
                 }
                 localPlayer.setName(nick);
             }
