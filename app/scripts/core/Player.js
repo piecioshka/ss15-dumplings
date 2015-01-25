@@ -151,12 +151,17 @@ define([
         this._phaser.x = this.x;
         this._phaser.y = this.y;
 
-        phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
+        var localPlayerID = Storage.get(Player.STORAGE_KEY);
 
-        this._phaser.body.bounce.y = 0;
-        this._phaser.body.collideWorldBounds = true;
-        this._phaser.body.setSize(28, 32, 2, 0);
-        this._phaser.body.gravity.y = 350;
+        // Grawitacja tylko dla lokalnego playera
+        if (this._id === localPlayerID) {
+            phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
+
+            this._phaser.body.bounce.y = 0;
+            this._phaser.body.collideWorldBounds = true;
+            this._phaser.body.setSize(28, 32, 2, 0);
+            this._phaser.body.gravity.y = 350;
+        }
 
         // 2. Dodajemy do grupy Phaser
         playersPhaser.add(this._phaser);

@@ -29,7 +29,7 @@
         'core/Point'
     ], function (Firebase, App, Game, Map, Point) {
         App.game = new Game();
-        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-pc'));
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.removeMaps();
 
         (function () {
