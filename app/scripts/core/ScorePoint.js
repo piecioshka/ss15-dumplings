@@ -48,10 +48,8 @@ define([
      */
     ScorePoint.prototype.destroy = function (silent) {
         // 1. Usunąć z Phaser.
-        try {
+        if (this._phaser) {
             this._phaser.destroy();
-        } catch (e) {
-            console.log('ScorePoint#destroy');
         }
 
         if (silent) return;

@@ -226,21 +226,22 @@ define([
 
     Game.prototype.preload = function () {
         // console.log('Game#preload');
-        this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
-        this._phaser.load.image('background', 'assets/images/github.jpeg');
+        this._phaser.load.spritesheet('tiles', 'assets/tiles.png', 32, 32);
+        // this._phaser.load.spritesheet('tools', 'assets/tools.png', 32, 32);
 
-        this._phaser.load.image('tool-grunt', 'assets/tools/grunt.png');
-        this._phaser.load.image('tool-yeoman', 'assets/tools/yeoman.png');
-        this._phaser.load.image('tool-bower', 'assets/tools/bower.png');
-        this._phaser.load.image('tool-angular', 'assets/tools/angular.png');
-        this._phaser.load.image('tool-bootstrap', 'assets/tools/bootstrap.png');
-        this._phaser.load.image('tool-css3', 'assets/tools/css3.png');
-        this._phaser.load.image('tool-gulp', 'assets/tools/gulp.png');
-        this._phaser.load.image('tool-html5', 'assets/tools/html5.png');
-        this._phaser.load.image('tool-sass', 'assets/tools/sass.png');
+        this._phaser.load.image('bg-github', 'assets/bg/github.jpeg');
+        this._phaser.load.image('bg-cegielki', 'assets/bg/cegielki.png');
+        this._phaser.load.image('bg-las', 'assets/bg/las.png');
+        this._phaser.load.image('bg-miasto', 'assets/bg/miasto.png');
+        this._phaser.load.image('bg-niebo', 'assets/bg/niebo.png');
+        this._phaser.load.image('bg-woda', 'assets/bg/woda.png');
 
         this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
+        this._phaser.load.tilemap('map-3', 'assets/maps/map-3.json', null, Phaser.Tilemap.TILED_JSON);
+        this._phaser.load.tilemap('map-4', 'assets/maps/map-4.json', null, Phaser.Tilemap.TILED_JSON);
+        this._phaser.load.tilemap('map-5', 'assets/maps/map-5.json', null, Phaser.Tilemap.TILED_JSON);
+        this._phaser.load.tilemap('map-6', 'assets/maps/map-6.json', null, Phaser.Tilemap.TILED_JSON);
     };
 
     Game.prototype.create = function () {
@@ -248,7 +249,7 @@ define([
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
 
-        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, 'background');
+        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, 'bg-github');
         bg.fixedToCamera = true;
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
@@ -274,6 +275,7 @@ define([
 
     Game.prototype.setupCollisions = function (localPlayerInstance, map) {
         // console.log('Game#setupCollisions');
+        var self = this;
 
         if (!this.__cachedArcade) {
             this.__cachedArcade = this._phaser.physics.arcade;
@@ -286,6 +288,11 @@ define([
 
             if (player.id === localPlayerInstance.getID()) {
                 localPlayerInstance.addCollectedPoints(pointInstance);
+            }
+
+            if (_.isEmpty(map.getScorePoints())) {
+                alert(Game.MSG_END);
+                location.reload(true);
             }
         });
 
@@ -302,6 +309,7 @@ define([
     };
 
     Game.MSG_GET_NICK = 'Type your nick:';
+    Game.MSG_END = 'Game is finished. Thanks! To get next level please reload.';
 
     return Game;
 });

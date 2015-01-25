@@ -32,7 +32,7 @@
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.fetchMaps(function () {
             App.game.setupEvents();
-            App.game.selectMap(1);
+            App.game.selectMap(2);
             App.game.start();
 
             PointsManager.listen(App.game);
