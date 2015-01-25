@@ -97,18 +97,23 @@ define([
         phaser.camera.follow(this._phaser);
     };
 
-    Player.prototype.render = function (phaser) {
-        // console.log('Player#render', phaser);
-        this._phaser = phaser.add.sprite(0, 32 * 8, 'tile-monkey');
+    Player.prototype.render = function (phaser, playersPhaser) {
+        // console.log('Player#render');
+        this._phaser = phaser.add.sprite(32 * this.x, 32 * this.y, 'tile-monkey');
+
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
 
         this._phaser.body.bounce.y = 0;
         this._phaser.body.collideWorldBounds = true;
         this._phaser.body.setSize(12, 28, 10, 2);
         this._phaser.body.gravity.y = 350;
+
+        // 2. Dodajemy do grupy Phaser
+        playersPhaser.add(this._phaser);
     };
 
     Player.prototype.update = function (phaser, cursors, jumpButton) {
+        // console.log('Player#update');
         this._phaser.body.velocity.x = 0;
 
         if (cursors.left.isDown) {

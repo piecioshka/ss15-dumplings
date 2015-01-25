@@ -25,36 +25,36 @@
         'firebase',
         'core/App',
         'core/Game',
-        'core/World',
+        'core/Map',
         'core/Point',
         'core/Player'
-    ], function (Firebase, App, Game, World, Point, Player) {
+    ], function (Firebase, App, Game, Map, Point, Player) {
         App.game = new Game();
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
-        App.game.removeWorlds();
+        App.game.removeMaps();
 
         (function () {
-            var world = new World(1);
-            App.game.addWorld(world);
+            var map = new Map(1);
+            App.game.addMap(map);
 
-            world.setMap('assets/maps/map-1.json');
+            map.setPath('assets/maps/map-1.json');
 
-            world.addPoint(new Point(0, 0, 1));
+            map.addPoint(new Point(0, 0, 1));
 
-            world.addPlayer(new Player(3, 0));
+            map.addPlayer(new Player(3, 0));
         }());
 
         (function () {
-            var world = new World(2);
-            App.game.addWorld(world);
+            var map = new Map(2);
+            App.game.addMap(map);
 
-            world.setMap('assets/maps/map-2.json');
+            map.setPath('assets/maps/map-2.json');
 
-            world.addPoint(new Point(10, 10, 11));
-            world.addPoint(new Point(10, 13, 12));
+            map.addPoint(new Point(10, 10, 11));
+            map.addPoint(new Point(10, 13, 12));
 
-            world.addPlayer(new Player(13, 10));
-            world.addPlayer(new Player(13, 13));
+            map.addPlayer(new Player(13, 10));
+            map.addPlayer(new Player(13, 13));
         }());
 
         // Exports

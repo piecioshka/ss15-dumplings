@@ -29,8 +29,8 @@
         App.game = new Game();
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.setupEvents();
-        App.game.fetchWorlds(function () {
-            App.game.selectWorld(1);
+        App.game.fetchMaps(function () {
+            App.game.selectMap(1);
             App.game.start();
         });
 

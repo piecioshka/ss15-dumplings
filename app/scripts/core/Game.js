@@ -4,16 +4,16 @@ define([
     'promise',
     'phaser',
     'core/Configuration',
-    'core/World',
+    'core/Map',
     'core/Player',
     'core/Storage'
-], function (_, Backbone, promise, Phaser, Configuration, World, Player, Storage) {
+], function (_, Backbone, promise, Phaser, Configuration, Map, Player, Storage) {
     'use strict';
 
     var Game = function () {
         _.extend(this, Backbone.Events);
-        this._worlds = {};
-        this._selectedWorldID = undefined;
+        this._maps = {};
+        this._selectedMapID = undefined;
         this._fb = undefined;
         this._phaser = new Phaser.Game(Configuration.WORLD_WIDTH, Configuration.WORLD_HEIGHT, Phaser.CANVAS, 'playground');
         this._phaser.state.add('Bootstrap', {
@@ -29,14 +29,14 @@ define([
     };
 
     /**
-     * @param {World} world
+     * @param {Map} map
      */
-    Game.prototype.addWorld = function (world) {
-        // console.log('Game#addWorld', world);
+    Game.prototype.addMap = function (map) {
+        // console.log('Game#addMap', map);
         // 1. Aktualizujemy instancję.
-        this._worlds[world.getID()] = world;
+        this._maps[map.getID()] = map;
         // 2. Ustawiamy połączenie Firebase
-        world.setFirebaseConnection(this._fb.child(world.getID()));
+        map.setFirebaseConnection(this._fb.child(map.getID()));
     };
 
     Game.prototype.setupEvents = function () {
@@ -49,7 +49,7 @@ define([
     /**
      * @param {Function} cb
      */
-    Game.prototype.fetchWorlds = function (cb) {
+    Game.prototype.fetchMaps = function (cb) {
         var self = this;
 
         this._fb.once('value', function (snapshot) {
@@ -57,17 +57,17 @@ define([
 
             var callbacks = [];
 
-            _.each(snap, function (remoteWorld, worldID) {
+            _.each(snap, function (remoteMap, mapID) {
                 var p = new promise.Promise();
-                var snapWorld = snap[worldID];
+                var snapMap = snap[mapID];
 
-                var world = new World(snapWorld.stage);
-                world.setID(worldID);
-                world.setMap(snapWorld.map, true);
+                var map = new Map(snapMap.stage);
+                map.setID(mapID);
+                map.setPath(snapMap.path, true);
 
-                self.addWorld(world);
+                self.addMap(map);
 
-                world.loadChildren(function () {
+                map.loadChildren(function () {
                     p.done();
                 });
 
@@ -81,39 +81,39 @@ define([
     /**
      * @param {number} stage
      */
-    Game.prototype.selectWorld = function (stage) {
-        var cachedSelectedWorldID = this._selectedWorldID;
+    Game.prototype.selectMap = function (stage) {
+        var cachedSelectedMapID = this._selectedMapID;
 
-        delete this._selectedWorldID;
+        delete this._selectedMapID;
 
-        _.each(this._worlds, function (worldInstance, worldID) {
-            var world = this._worlds[worldID];
+        _.each(this._maps, function (mapInstance, mapID) {
+            var map = this._maps[mapID];
 
-            if (world.getStage() !== stage) {
+            if (map.getStage() !== stage) {
                 return;
             }
 
-            this._selectedWorldID = worldID;
+            this._selectedMapID = mapID;
         }, this);
 
-        if (!this._selectedWorldID) {
-            throw new Error('Sorry, we could not load world with stage: ' + stage);
+        if (!this._selectedMapID) {
+            throw new Error('Sorry, we could not load map with stage: ' + stage);
         }
 
-        if (cachedSelectedWorldID && cachedSelectedWorldID !== this._selectedWorldID) {
-            var world = this._worlds[this._selectedWorldID];
+        if (cachedSelectedMapID && cachedSelectedMapID !== this._selectedMapID) {
+            var map = this._maps[this._selectedMapID];
 
-            if (world) {
-                var player = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+            if (map) {
+                var player = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
                 if (player) {
-                    world.removePlayer(player);
+                    map.removePlayer(player);
                 }
             }
         }
     };
 
-    Game.prototype.removeWorlds = function () {
+    Game.prototype.removeMaps = function () {
         this._fb.remove(function (error) {
             if (error) {
                 throw new Error('Synchronization failed');
@@ -121,8 +121,8 @@ define([
         });
     };
 
-    Game.prototype.renderSelectedWorld = function () {
-        var world = this._worlds[this._selectedWorldID];
+    Game.prototype.renderSelectedMap = function () {
+        var map = this._maps[this._selectedMapID];
         var playerID = Storage.get(Player.STORAGE_KEY);
         var localPlayer = new Player(5, 5);
 
@@ -132,8 +132,8 @@ define([
             localPlayer.setID(playerID);
         }
 
-        world.addPlayer(localPlayer);
-        world.render(this._phaser);
+        map.addPlayer(localPlayer);
+        map.render(this._phaser);
     };
 
     /**
@@ -153,32 +153,31 @@ define([
 
     Game.prototype.create = function () {
         // console.log('Game#create');
-        this.renderSelectedWorld();
-
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
         this._phaserJumpButton = this._phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        this.renderSelectedMap();
     };
 
     Game.prototype.update = function () {
         // console.log('Game#update');
-        var world = this._worlds[this._selectedWorldID];
-        var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
-        localPlayer.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
+        var map = this._maps[this._selectedMapID];
+        var localPlayer = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
-        this.setupCollisions();
+        // Może ktoś wyczyścił storage?
+        if (localPlayer) {
+            this.setupCollisions();
+            localPlayer.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
+        }
     };
 
     Game.prototype.setupCollisions = function () {
         // console.log('Game#setupCollisions');
-        var world = this._worlds[this._selectedWorldID];
-        var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
-
-        this._phaser.physics.arcade.collide(localPlayer._phaser, world._phaser, function () {
-            console.log.apply(console, arguments);
-        });
+        var map = this._maps[this._selectedMapID];
+        this._phaser.physics.arcade.collide(map._worldPhaser, map._playersPhaser);
     };
 
     Game.prototype.start = function () {
