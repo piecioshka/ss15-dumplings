@@ -48,7 +48,7 @@ define([
         });
 
         _.each(this._maps, function (map, mapID) {
-            this._fb.child(mapID + '/points').on('child_removed', function (snapshot) {
+            this._fb.child(mapID + '/scorePoints').on('child_removed', function (snapshot) {
                 var snap = snapshot.val();
                 var pointInstance = map.getPointByID(snap.id);
                 map.removeScorePoint(pointInstance, true);

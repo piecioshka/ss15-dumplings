@@ -13,35 +13,9 @@ body {
     margin: 0 auto;
 }
 
-a#show-results-list {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    padding: 5px;
-
-    color: #eee;
-    background-color: rgba(4, 4, 4, 0.80);
-    border: 1px solid #333;
-    border-radius: 3px;
-
-    font-size: 14px;
-    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
-    cursor: pointer;
-    outline: none;
-
-    transition: all 0.5s;
-    overflow: hidden;
-    display: block;
-}
-
-a#show-results-list:hover {
-    border-color: #FFF;
-    text-decoration: none;
-}
-
 #results-list {
     position: absolute;
-    top: 35px;
+    top: 3px;
     left: 3px;
 
     color: #eee;

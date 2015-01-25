@@ -59,7 +59,7 @@ define([
         this._scorePoints[scorePoint.getID()] = scorePoint;
         // 2. Dodajemy do grupy Phaser
         // 3. Ustawiamy połączenie Firebase
-        scorePoint.setFirebaseConnection(this._fb.child('/score-points/' + scorePoint.getID()));
+        scorePoint.setFirebaseConnection(this._fb.child('/scorePoints/' + scorePoint.getID()));
         // 4. Aktualizujemy pozycję w Firebase
         scorePoint.sync();
     };
@@ -100,8 +100,8 @@ define([
                 self.addPlayer(playerInstance);
             });
 
-            _.each(snap.points, function (remotePoint, pointID) {
-                var snapPoints = snap.points[pointID];
+            _.each(snap.scorePoints, function (remotePoint, pointID) {
+                var snapPoints = snap.scorePoints[pointID];
 
                 var scorePoint = new ScorePoint(snapPoints.x, snapPoints.y, snapPoints.value, snapPoints.figure);
                 scorePoint.setID(pointID);

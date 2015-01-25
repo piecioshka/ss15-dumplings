@@ -6,30 +6,11 @@ define([
 
     var PointsManager = (function () {
         var TIME_TO_REFRESH_POINTS = 1000;
-        var isResultsAreVisible = true;
-        var labelShowList = 'Show results';
-        var labelHideList = 'Hide results';
         var resultsTable = [];
-        var $button, $results;
+        var $results;
 
         function listen(game) {
-            $button = $('#show-results-list');
             $results = $('#results-list');
-
-            $button.click(function (evt) {
-                evt.stopPropagation();
-                evt.preventDefault();
-
-                if (isResultsAreVisible) {
-                    $button.text(labelShowList);
-                    hideList();
-                } else {
-                    $button.text(labelHideList);
-                    showList();
-                }
-
-                isResultsAreVisible = !isResultsAreVisible;
-            });
 
             showList();
 
@@ -41,10 +22,6 @@ define([
             var players = game.getSelectedMap().getPlayers();
 
             setInterval(function () {
-                if (!isResultsAreVisible) {
-                    return;
-                }
-
                 resultsTable = _.map(players, function (player) {
                     return {
                         name: player.getName(),
