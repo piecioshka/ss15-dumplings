@@ -27,7 +27,7 @@
         'core/Game'
     ], function (Firebase, App, Game) {
         App.game = new Game();
-        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-new'));
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-pc'));
         App.game.fetchMaps(function () {
             App.game.setupEvents();
             App.game.selectMap(1);

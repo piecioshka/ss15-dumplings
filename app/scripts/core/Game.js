@@ -162,14 +162,18 @@ define([
     };
 
     Game.prototype.renderSelectedMap = function () {
+        var localPlayer, localPlayerInstance;
         var map = this._maps[this._selectedMapID];
         var playerID = Storage.get(Player.STORAGE_KEY);
-        var localPlayer = new Player(_.random(30, 90), 194);
 
         if (_.isEmpty(playerID)) {
+            localPlayer = new Player(_.random(30, 90), 194);
             Storage.put(Player.STORAGE_KEY, localPlayer.getID());
         } else {
-            localPlayer.setID(playerID);
+            localPlayerInstance = map.getPlayerByID(playerID);
+            if (localPlayerInstance) {
+                localPlayer = localPlayerInstance;
+            }
         }
 
         map.addPlayer(localPlayer);

@@ -115,7 +115,7 @@ define([
      */
     Player.prototype.setScore = function (score) {
         // 1. Aktualizacja instancji
-        this._score = score;
+        this._score = score || 0;
     };
 
     /**
@@ -133,6 +133,8 @@ define([
         // console.log('Player#render');
         this._phaser = phaser.add.sprite(this.x, this.y, 'tile-monkey');
         this._phaser.id = this._id;
+        this._phaser.x = this.x;
+        this._phaser.y = this.y;
 
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
 
