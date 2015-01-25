@@ -42,7 +42,11 @@ define([
      */
     Point.prototype.destroy = function (silent) {
         // 1. Usunąć z Phaser.
-        this._phaser.destroy();
+        try {
+            this._phaser.destroy();
+        } catch (e) {
+            console.log('Point#destroy');
+        }
 
         if (silent) return;
 
@@ -58,7 +62,7 @@ define([
     };
 
     Point.prototype.sync = function () {
-        console.log('Point#sync');
+        // console.log('Point#sync');
         this._fb.update({
             id: this._id,
             x: this.x,

@@ -71,7 +71,11 @@ define([
     Map.prototype.removePoint = function (point, silent) {
         // console.log('Map#removePoint', point, silent);
         // 1. Usuwamy obiekt
-        point.destroy(silent);
+        try {
+            point.destroy(silent);
+        } catch (e) {
+            console.log('Map#removePoint');
+        }
         // 2. Usuwamy go z listy.
         delete this._points[point.getID()];
     };
@@ -128,7 +132,11 @@ define([
     Map.prototype.removePlayer = function (player) {
         // console.log('Map#removePlayer', player);
         // 1. Usuwamy obiekt
-        player.destroy();
+        try {
+            player.destroy();
+        } catch (e) {
+            console.log('Map#removePlayer');
+        }
         // 2. Usuwamy go z listy.
         delete this._players[player.getID()];
         // 3. Usuwać z grupy Phasera
