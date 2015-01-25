@@ -6,3 +6,29 @@ body {
 #playground {
     float: left;
 }
+
+.scoreListButton {
+    position: absolute;
+    padding: 5px;
+    border: 1px solid #333;
+    color: #FFF;
+    background-color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+.scoreListButton:hover {
+    border-color: #FFF;
+}
+.scoreList {
+    display: none;
+    position: absolute;
+    margin-top: 30px;
+    background-color: #000;
+    color: #FFF;
+    padding: 5px 10px;
+}
+.scoreList ul {
+    list-style: none;
+    margin: 5px;
+    padding: 0;
+}

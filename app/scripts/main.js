@@ -24,14 +24,17 @@
     require([
         'firebase',
         'core/App',
-        'core/Game'
-    ], function (Firebase, App, Game) {
+        'core/Game',
+        'core/PointsManager'
+    ], function (Firebase, App, Game, PointsManager) {
         App.game = new Game();
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-pc'));
         App.game.fetchMaps(function () {
             App.game.setupEvents();
             App.game.selectMap(1);
             App.game.start();
+
+            PointsManager.listen(App.game);
         });
 
         // Exports

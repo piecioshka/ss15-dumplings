@@ -252,5 +252,17 @@ define([
         this._phaser.state.start('Bootstrap');
     };
 
+    Game.prototype.getMaps = function () {
+        return this._maps;
+    };
+
+    Game.prototype.getSelectedMapID = function () {
+        return this._selectedMapID;
+    };
+
+    Game.prototype.getSelectedMap = function () {
+        return this._maps[this._selectedMapID];
+    };
+
     return Game;
 });
