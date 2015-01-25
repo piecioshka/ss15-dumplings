@@ -45,7 +45,7 @@ define([
 
         // Jeśli usunęliśmy dowolną mapę z gry, to restartujemy całą gre.
         this._fb.on('child_removed', function () {
-            Storage.clear();
+            Storage.del(Player.STORAGE_KEY);
             location.reload(true);
         });
 
@@ -202,6 +202,7 @@ define([
             if (localPlayer.isDefaultName()) {
                 var nick = prompt(Game.MSG_GET_NICK);
                 if (!nick) {
+                    Storage.del(Player.STORAGE_KEY);
                     location.reload(true);
                 }
                 localPlayer.setName(nick);

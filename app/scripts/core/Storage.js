@@ -26,10 +26,6 @@ define([
          */
         del: function (key) {
             sessionStorage.removeItem(key);
-        },
-
-        clear: function () {
-            sessionStorage.clear();
         }
     };
 
