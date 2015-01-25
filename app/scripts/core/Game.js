@@ -51,6 +51,7 @@ define([
 
         $(window).on('beforeunload', function () {
             var localPlayerID = Storage.get(Player.STORAGE_KEY);
+            Storage.del(Player.STORAGE_KEY);
             var map = self.getSelectedMap();
             var localPlayerInstance = map.getPlayerByID(localPlayerID);
             _.defer(function () {
@@ -187,7 +188,6 @@ define([
 
         if (_.isEmpty(playerID)) {
             localPlayer = new Player(_.random(30, 90), 194);
-            Storage.put(Player.STORAGE_KEY, localPlayer.getID());
         } else {
             localPlayerInstance = map.getPlayerByID(playerID);
             if (localPlayerInstance) {
@@ -197,6 +197,8 @@ define([
 
         // Może się jeszcze nie stworzył?
         if (localPlayer) {
+            Storage.put(Player.STORAGE_KEY, localPlayer.getID());
+
             if (localPlayer.isDefaultName()) {
                 var nick = prompt(Game.MSG_GET_NICK);
                 if (!nick) {
