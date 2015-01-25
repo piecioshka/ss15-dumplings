@@ -90,9 +90,7 @@ define([
         this._phaser.destroy();
         // 2. Usunąć label z Phaser-a
         this._label.destroy();
-        // 3. Usuwamy playera ze storage-a
-        Storage.del(Player.STORAGE_KEY);
-        // 4. Usuwamy z Firebase
+        // 3. Usuwamy z Firebase
         this._fb.remove();
     };
 

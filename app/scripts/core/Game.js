@@ -53,7 +53,9 @@ define([
             var localPlayerID = Storage.get(Player.STORAGE_KEY);
             var map = self.getSelectedMap();
             var localPlayerInstance = map.getPlayerByID(localPlayerID);
-            map.removePlayer(localPlayerInstance);
+            _.defer(function () {
+                map.removePlayer(localPlayerInstance);
+            });
         });
 
         _.each(this._maps, function (map, mapID) {

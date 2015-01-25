@@ -135,10 +135,10 @@ define([
         // console.log('Map#removePlayer', player);
         // 1. Usuwać z grupy Phasera
         this._playersPhaser.removeChild(player);
-        // 2. Usuwamy obiekt
-        player.destroy();
-        // 3. Usuwamy go z listy.
+        // 2. Usuwamy go z listy.
         delete this._players[player.getID()];
+        // 3. Usuwamy obiekt
+        player.destroy();
     };
 
     /**
