@@ -161,8 +161,7 @@ define([
         this._phaser.x = this.x;
         this._phaser.y = this.y;
 
-        //TODO: Change slice to call function which render nick.
-        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), (this._id.slice(0, 5) + '...'), Player.LABEL_STYLE);
+        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), this.getNick(), Player.LABEL_STYLE);
 
         var localPlayerID = Storage.get(Player.STORAGE_KEY);
 

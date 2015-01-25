@@ -6,7 +6,7 @@ define([
 
     var PointsManager = (function () {
         var TIME_TO_REFRESH_POINTS = 1000;
-        var isResultsAreVisible = false;
+        var isResultsAreVisible = true;
         var labelShowList = 'Show results';
         var labelHideList = 'Hide results';
         var resultsTable = [];
@@ -31,11 +31,13 @@ define([
                 isResultsAreVisible = !isResultsAreVisible;
             });
 
+            showList();
+
             collectPoints(game);
         }
 
         function collectPoints(game) {
-            console.log('PointsManager#collectPoints', game);
+            // console.log('PointsManager#collectPoints', game);
             var players = game.getSelectedMap().getPlayers();
 
             setInterval(function () {
@@ -70,7 +72,7 @@ define([
             var $list = $('<ul>');
 
             _.each(resultsTable, function (row, index) {
-                var $row = $('<li>').html('(<strong>' + row.score + '</strong>) ' + row.name);
+                var $row = $('<li>').html('<strong>' + row.score + '</strong>: ' + row.name);
                 if (index === 0) {
                     $row.addClass('winner');
                 }

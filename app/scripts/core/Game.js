@@ -254,6 +254,7 @@ define([
         }
 
         this.__cachedArcade.collide(map._playersPhaser, map._worldPhaser);
+        this.__cachedArcade.collide(map._playersPhaser, map._playersPhaser);
         this.__cachedArcade.overlap(map._playersPhaser, map._pointsPhaser, function (player, point) {
             var pointInstance = map.getPointByID(point.id);
             map.removePoint(pointInstance);
