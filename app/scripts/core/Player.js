@@ -155,7 +155,7 @@ define([
 
         this._phaser.body.bounce.y = 0;
         this._phaser.body.collideWorldBounds = true;
-        this._phaser.body.setSize(12, 28, 10, 2);
+        this._phaser.body.setSize(28, 32, 2, 0);
         this._phaser.body.gravity.y = 350;
 
         // 2. Dodajemy do grupy Phaser
