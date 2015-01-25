@@ -24,7 +24,6 @@ define([
 
         this._phaserCursors = undefined;
         this._phaserJumpButton = undefined;
-        this._phaserJumpTimer = 0;
 
         console.info('Game was created at: %s', new Date());
     };
@@ -167,20 +166,7 @@ define([
         // console.log('Game#update');
         var world = this._worlds[this._selectedWorldID];
         var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
-
-        // How much different between localPlayer and ground.
-        localPlayer._phaser.body.velocity.x = 0;
-
-        if (this._phaserCursors.left.isDown) {
-            localPlayer._phaser.body.velocity.x = -150;
-        } else if (this._phaserCursors.right.isDown) {
-            localPlayer._phaser.body.velocity.x = 150;
-        }
-
-        if (this._phaserJumpButton.isDown && localPlayer._phaser.body.onFloor() && this._phaser.time.now > this._phaserJumpTimer) {
-            localPlayer._phaser.body.velocity.y = -300;
-            this._phaserJumpTimer = this._phaser.time.now - 10;
-        }
+        localPlayer.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
     };
 
     Game.prototype.start = function () {

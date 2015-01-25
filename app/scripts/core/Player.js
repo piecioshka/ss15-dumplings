@@ -108,6 +108,20 @@ define([
         this._phaser.body.gravity.y = 350;
     };
 
+    Player.prototype.update = function (phaser, cursors, jumpButton) {
+        this._phaser.body.velocity.x = 0;
+
+        if (cursors.left.isDown) {
+            this._phaser.body.velocity.x = -150;
+        } else if (cursors.right.isDown) {
+            this._phaser.body.velocity.x = 150;
+        }
+
+        if (jumpButton.isDown && this._phaser.body.onFloor()) {
+            this._phaser.body.velocity.y = -300;
+        }
+    };
+
     // -----------------------------------------------------------------------------------------------------------------
 
     Player.EVENTS = {
