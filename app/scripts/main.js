@@ -31,7 +31,7 @@
         App.game.setupEvents();
         App.game.fetchWorlds(function () {
             App.game.selectWorld(1);
-            App.game.renderSelectedWorld();
+            App.game.start();
         });
 
         // Exports

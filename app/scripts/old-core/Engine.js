@@ -9,15 +9,15 @@ define([
     'use strict';
 
     var Engine = {
-        cursors: undefined,
         map: undefined,
         raft: undefined,
         world: undefined,
-        
+
         waterGroup: undefined,
         playerGroup: undefined,
         pointGroup: undefined,
 
+        cursors: undefined,
         jumpTimer: 0,
         jumpButton: undefined,
 

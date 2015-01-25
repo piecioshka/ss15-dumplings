@@ -93,8 +93,12 @@ define([
         this._fb = connection;
     };
 
+    Player.prototype.setCameraOnIt = function (phaser) {
+        phaser.camera.follow(this._phaser);
+    };
+
     Player.prototype.render = function (phaser) {
-        console.log('Player#render', phaser);
+        // console.log('Player#render', phaser);
         this._phaser = phaser.add.sprite(0, 32 * 8, 'tile-monkey');
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
 

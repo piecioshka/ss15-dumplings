@@ -15,26 +15,18 @@ define([
         this._worlds = {};
         this._selectedWorldID = undefined;
         this._fb = undefined;
-        this._phaser = new Phaser.Game(Configuration.WINDOW_WIDTH, Configuration.WINDOW_HEIGHT, Phaser.CANVAS, 'playground', {
-            preload: this.loadAssets.bind(this),
-            create: this.render.bind(this),
-
-            update: function () {
-                // console.log('update');
-            },
-
-            render: function () {
-                // console.log('render');
-            }
+        this._phaser = new Phaser.Game(Configuration.WINDOW_WIDTH, Configuration.WINDOW_HEIGHT, Phaser.CANVAS, 'playground');
+        this._phaser.state.add('Bootstrap', {
+            preload: this.preload.bind(this),
+            create: this.create.bind(this),
+            update: this.update.bind(this)
         });
 
-        console.info('Game was created at: %s', new Date());
-    };
+        this._phaserCursors = undefined;
+        this._phaserJumpButton = undefined;
+        this._phaserJumpTimer = 0;
 
-    Game.prototype.loadAssets = function () {
-        this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
-        this._phaser.load.image('tile-monkey', 'assets/images/tile-monkey.png');
-        this._phaser.load.tilemap('map', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
+        console.info('Game was created at: %s', new Date());
     };
 
     /**
@@ -152,9 +144,47 @@ define([
         this._fb = connection;
     };
 
-    Game.prototype.render = function () {
+    Game.prototype.preload = function () {
+        // console.log('Game#preload');
+        this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
+        this._phaser.load.image('tile-monkey', 'assets/images/tile-monkey.png');
+        this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
+        this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
+    };
+
+    Game.prototype.create = function () {
+        // console.log('Game#create');
+        this.renderSelectedWorld();
+
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
+
+        this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
+        this._phaserJumpButton = this._phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    };
+
+    Game.prototype.update = function () {
+        // console.log('Game#update');
+        var world = this._worlds[this._selectedWorldID];
+        var localPlayer = world.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+        // How much different between localPlayer and ground.
+        localPlayer._phaser.body.velocity.x = 0;
+
+        if (this._phaserCursors.left.isDown) {
+            localPlayer._phaser.body.velocity.x = -150;
+        } else if (this._phaserCursors.right.isDown) {
+            localPlayer._phaser.body.velocity.x = 150;
+        }
+
+        if (this._phaserJumpButton.isDown && localPlayer._phaser.body.onFloor() && this._phaser.time.now > this._phaserJumpTimer) {
+            localPlayer._phaser.body.velocity.y = -300;
+            this._phaserJumpTimer = this._phaser.time.now - 10;
+        }
+    };
+
+    Game.prototype.start = function () {
+        this._phaser.state.start('Bootstrap');
     };
 
     return Game;
