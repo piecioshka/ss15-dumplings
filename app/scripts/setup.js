@@ -23,20 +23,19 @@
 
     require([
         'firebase',
+        'core/App',
         'core/Game',
         'core/World',
         'core/Point',
         'core/Player'
-    ], function (Firebase, Game, World, Point, Player) {
-        'use strict';
-
-        var game = new Game();
-        game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
-        game.removeWorlds();
+    ], function (Firebase, App, Game, World, Point, Player) {
+        App.game = new Game();
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
+        App.game.removeWorlds();
 
         (function () {
             var world = new World(1);
-            game.addWorld(world);
+            App.game.addWorld(world);
 
             world.setMap('assets/maps/map-1.json');
 
@@ -47,7 +46,7 @@
 
         (function () {
             var world = new World(2);
-            game.addWorld(world);
+            App.game.addWorld(world);
 
             world.setMap('assets/maps/map-2.json');
 
@@ -57,5 +56,8 @@
             world.addPlayer(new Player(13, 10));
             world.addPlayer(new Player(13, 13));
         }());
+
+        // Exports
+        root.App = App;
     });
 }(this));

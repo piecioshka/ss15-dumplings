@@ -21,13 +21,15 @@ define([
      * @param {World} world
      */
     Game.prototype.addWorld = function (world) {
-        console.log('Game#addWorld', world);
+        // console.log('Game#addWorld', world);
         // 1. Aktualizujemy instancję.
         this._worlds[world.getID()] = world;
+        // 2. Ustawiamy połączenie Firebase
         world.setFirebaseConnection(this._fb.child(world.getID()));
     };
 
     Game.prototype.setupEvents = function () {
+        // Jeśli usunęliśmy jakiś świat z gry, to restartujemy całą gre.
         this._fb.on('child_removed', function () {
             location.reload(true);
         });
@@ -44,7 +46,7 @@ define([
 
             var callbacks = [];
 
-            _.each(_.keys(snap), function (worldID) {
+            _.each(snap, function (remoteWorld, worldID) {
                 var p = new promise.Promise();
                 var snapWorld = snap[worldID];
 
@@ -73,7 +75,7 @@ define([
 
         delete this._selectedWorldID;
 
-        _.each(_.keys(this._worlds), function (worldID) {
+        _.each(this._worlds, function (worldInstance, worldID) {
             var world = this._worlds[worldID];
 
             if (world.getStage() !== stage) {

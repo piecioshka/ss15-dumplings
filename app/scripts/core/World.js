@@ -47,11 +47,11 @@ define([
      * @param {Point} point
      */
     World.prototype.addPoint = function (point) {
-        console.log('World#addPoint', point);
+        // console.log('World#addPoint', point);
         // 1. Aktualizujemy instancję.
         this._points[point.getID()] = point;
         // 2. Dodajemy do grupy Phaser
-        // 3. Dodajemy do Firebase
+        // 3. Ustawiamy połączenie Firebase
         point.setFirebaseConnection(this._fb.child('/points/' + point.getID()));
         // 4. Aktualizujemy pozycję w Firebase
         point.sync();
@@ -61,7 +61,7 @@ define([
      * @param {Point} point
      */
     World.prototype.removePoint = function (point) {
-        console.log('World#removePoint', point);
+        // console.log('World#removePoint', point);
         // 1. Usuwamy obiekt
         point.destroy();
         // 2. Usuwamy go z listy.
@@ -77,7 +77,7 @@ define([
         this._fb.once('value', function (snapshot) {
             var snap = snapshot.val();
 
-            _.each(_.keys(snap.players), function (playerID) {
+            _.each(snap.players, function (remotePlayer, playerID) {
                 var snapPlayer = snap.players[playerID];
 
                 var player = new Player(snapPlayer.x, snapPlayer.y);
@@ -86,7 +86,7 @@ define([
                 self.addPlayer(player);
             });
 
-            _.each(_.keys(snap.points), function (pointID) {
+            _.each(snap.points, function (remotePoint, pointID) {
                 var snapPoint = snap.points[pointID];
 
                 var point = new Point(snapPoint.x, snapPoint.y, snapPoint.value);
@@ -105,11 +105,11 @@ define([
      * @param {Player} player
      */
     World.prototype.addPlayer = function (player) {
-        console.log('World#addPlayer', player);
+        // console.log('World#addPlayer', player);
         // 1. Aktualizujemy instancję.
         this._players[player.getID()] = player;
         // 2. Dodajemy do grupy Phaser
-        // 3. Dodajemy do Firebase
+        // 3. Ustawiamy połączenie Firebase
         player.setFirebaseConnection(this._fb.child('/players/' + player.getID()));
         // 4. Aktualizujemy pozycję w Firebase
         player.sync();
@@ -119,7 +119,7 @@ define([
      * @param {Player} player
      */
     World.prototype.removePlayer = function (player) {
-        console.log('World#removePlayer', player);
+        // console.log('World#removePlayer', player);
         // 1. Usuwamy obiekt
         player.destroy();
         // 2. Usuwamy go z listy.
