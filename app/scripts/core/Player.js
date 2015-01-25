@@ -25,6 +25,14 @@ define([
 
         this._phaser = undefined;
         this._fb = undefined;
+        this.label = undefined;
+    };
+
+    Player.LABEL_DISTANCE = 18;
+    Player.LABEL_STYLE = {
+        font: '11px Tahoma',
+        fill: '#F00',
+        align: 'center'
     };
 
     /**
@@ -80,6 +88,8 @@ define([
         // 1. Aktualizacja instancji
         this.x = x;
         this.y = y;
+        this._label.x = x;
+        this._label.y = (y - Player.LABEL_DISTANCE);
 
         if (silent) {
             // 2. Aktualizacja na Phaser
@@ -150,6 +160,9 @@ define([
         this._phaser.id = this._id;
         this._phaser.x = this.x;
         this._phaser.y = this.y;
+
+        //TODO: Change slice to call function which render nick.
+        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), (this._id.slice(0, 5) + '...'), LABEL_STYLE);
 
         var localPlayerID = Storage.get(Player.STORAGE_KEY);
 
