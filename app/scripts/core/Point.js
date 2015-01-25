@@ -1,8 +1,9 @@
 define([
     'lodash',
     'backbone',
+    'phaser',
     'core/Utilities'
-], function (_, Backbone, Utilities) {
+], function (_, Backbone, Phaser, Utilities) {
     'use strict';
 
     /**
@@ -60,6 +61,21 @@ define([
      */
     Point.prototype.setFirebaseConnection = function (connection) {
         this._fb = connection;
+    };
+
+    Point.prototype.render = function (phaser, pointsPhaser) {
+        // console.log('Point#render');
+        this._phaser = phaser.add.tileSprite(32 * this.x, 32 * this.y, 32, 32, 'tile-ground', 3);
+
+        phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
+
+        this._phaser.body.bounce.y = 0;
+        this._phaser.body.collideWorldBounds = true;
+        this._phaser.body.setSize(32, 32, 0, 0);
+        this._phaser.body.gravity.y = 350;
+
+        // 2. Dodajemy do grupy Phaser
+        pointsPhaser.add(this._phaser);
     };
 
     return Point;

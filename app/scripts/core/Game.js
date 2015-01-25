@@ -178,6 +178,10 @@ define([
         // console.log('Game#setupCollisions');
         var map = this._maps[this._selectedMapID];
         this._phaser.physics.arcade.collide(map._worldPhaser, map._playersPhaser);
+        this._phaser.physics.arcade.collide(map._worldPhaser, map._pointsPhaser);
+        this._phaser.physics.arcade.collide(map._playersPhaser, map._pointsPhaser, function (player, point) {
+            point.destroy();
+        });
     };
 
     Game.prototype.start = function () {

@@ -19,11 +19,13 @@ define([
         this._id = Utilities.guid();
 
         this._path = '';
+        this._stage = stage;
+
         this._points = {};
-        // this._pointsPhaser =
+        this._pointsPhaser = undefined;
+
         this._players = {};
         this._playersPhaser = undefined;
-        this._stage = stage;
 
         this._phaser = undefined;
         this._fb = undefined;
@@ -187,6 +189,14 @@ define([
         // 4. Kamera na graczu lokalnym.
         var localPlayer = this.getPlayerByID(Storage.get(Player.STORAGE_KEY));
         localPlayer.setCameraOnIt(phaser);
+
+        // 5. Tworzymy grupę points-ów
+        this._pointsPhaser = phaser.add.group();
+        this._pointsPhaser.enableBody = true;
+        this._pointsPhaser.physicsBodyType = Phaser.Physics.ARCADE;
+
+        // 6. Renderujemy punkty-ów.
+        _.invoke(this._points, 'render', phaser, this._pointsPhaser);
     };
 
     /**
