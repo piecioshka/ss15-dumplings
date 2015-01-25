@@ -54,7 +54,7 @@ define([
      * @param {string} name
      */
     Player.prototype.setName = function (name) {
-        this._name = name;
+        this._name = name || 'noname';
     };
 
     /**
