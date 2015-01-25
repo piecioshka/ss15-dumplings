@@ -39,6 +39,9 @@ define([
 
     Point.prototype.destroy = function () {
         // 1. Usunąć z Phaser.
+        this._phaser.destroy();
+        // 2. Usunąć z Firebase
+        this._fb.remove();
     };
 
     /**
@@ -66,6 +69,7 @@ define([
     Point.prototype.render = function (phaser, pointsPhaser) {
         // console.log('Point#render');
         this._phaser = phaser.add.tileSprite(32 * this.x, 32 * this.y, 32, 32, 'tile-ground', 3);
+        this._phaser.id = this._id;
 
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
 

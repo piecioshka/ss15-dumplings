@@ -40,8 +40,8 @@
             map.setPath('assets/maps/map-1.json');
 
             map.addPoint(new Point(10, 0, 1));
-            map.addPoint(new Point(24, 2, 1));
-            map.addPoint(new Point(8, 4, 1));
+            map.addPoint(new Point(24, 2, 3));
+            map.addPoint(new Point(8, 4, 7));
 
             // map.addPlayer(new Player(3, 0));
         }());

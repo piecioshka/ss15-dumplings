@@ -160,6 +160,14 @@ define([
     };
 
     /**
+     * @param {string} id
+     * @returns {Point}
+     */
+    Map.prototype.getPointByID = function (id) {
+        return _.findWhere(this._points, { _id: id });
+    };
+
+    /**
      * @param {Firebase} connection
      */
     Map.prototype.setFirebaseConnection = function (connection) {
