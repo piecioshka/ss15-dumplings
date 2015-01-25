@@ -64,6 +64,7 @@ define([
                     playerInstance = new Player(snap.x, snap.y);
                     playerInstance.setID(snap.id);
                     playerInstance.setScore(snap.score);
+                    playerInstance.setFigure(snap.figure);
                     playerInstance.render(self._phaser, map._playersPhaser);
                     map.addPlayer(playerInstance);
                 }
@@ -182,7 +183,11 @@ define([
             }
         }
 
-        map.addPlayer(localPlayer);
+        // Może się jeszcze nie stworzył?
+        if (localPlayer) {
+            map.addPlayer(localPlayer);
+        }
+
         map.render(this._phaser);
     };
 
@@ -196,7 +201,18 @@ define([
     Game.prototype.preload = function () {
         // console.log('Game#preload');
         this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
-        this._phaser.load.image('tile-monkey', 'assets/images/tile-monkey.png');
+        this._phaser.load.image('background', 'assets/images/github.jpeg');
+
+        this._phaser.load.image('tool-grunt', 'assets/tools/grunt.png');
+        this._phaser.load.image('tool-yeoman', 'assets/tools/yeoman.png');
+        this._phaser.load.image('tool-bower', 'assets/tools/bower.png');
+        this._phaser.load.image('tool-angular', 'assets/tools/angular.png');
+        this._phaser.load.image('tool-bootstrap', 'assets/tools/bootstrap.png');
+        this._phaser.load.image('tool-css3', 'assets/tools/css3.png');
+        this._phaser.load.image('tool-gulp', 'assets/tools/gulp.png');
+        this._phaser.load.image('tool-html5', 'assets/tools/html5.png');
+        this._phaser.load.image('tool-sass', 'assets/tools/sass.png');
+
         this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
     };
@@ -205,6 +221,9 @@ define([
         // console.log('Game#create');
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
+
+        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, 'background');
+        bg.fixedToCamera = true;
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
         this._phaserJumpButton = this._phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

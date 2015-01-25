@@ -10,9 +10,10 @@ define([
     /**
      * @param {number} x
      * @param {number} y
+     * @param {string} figure
      * @constructor
      */
-    var Player = function (x, y) {
+    var Player = function (x, y, figure) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
 
@@ -20,6 +21,7 @@ define([
         this.y = y;
 
         this._score = 0;
+        this._figure = figure || Player.YEOMAN;
 
         this._phaser = undefined;
         this._fb = undefined;
@@ -60,7 +62,8 @@ define([
             id: this._id,
             x: this.x,
             y: this.y,
-            score: this._score
+            score: this._score,
+            figure: this._figure
         });
     };
 
@@ -119,6 +122,14 @@ define([
     };
 
     /**
+     * @param {string} figure
+     */
+    Player.prototype.setFigure = function (figure) {
+        // 1. Aktualizacja instancji
+        this._figure = figure;
+    };
+
+    /**
      * @param {Firebase} connection
      */
     Player.prototype.setFirebaseConnection = function (connection) {
@@ -131,7 +142,11 @@ define([
 
     Player.prototype.render = function (phaser, playersPhaser) {
         // console.log('Player#render');
-        this._phaser = phaser.add.sprite(this.x, this.y, 'tile-monkey');
+        if (!this._figure) {
+            throw new Error('figure is not set');
+        }
+
+        this._phaser = phaser.add.sprite(this.x, this.y, this._figure);
         this._phaser.id = this._id;
         this._phaser.x = this.x;
         this._phaser.y = this.y;
@@ -140,7 +155,7 @@ define([
 
         this._phaser.body.bounce.y = 0;
         this._phaser.body.collideWorldBounds = true;
-        this._phaser.body.setSize(12, 28, 10, 2);
+        this._phaser.body.setSize(28, 32, 2, 0);
         this._phaser.body.gravity.y = 350;
 
         // 2. Dodajemy do grupy Phaser
@@ -164,6 +179,10 @@ define([
         // 2. Aktualizacja w Firebase
         this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
+
+    Player.GRUNT = 'tool-grunt';
+    Player.YEOMAN = 'tool-yeoman';
+    Player.BOWER = 'tool-bower';
 
     Player.STORAGE_KEY = 'ss15-dumplings-player';
 
