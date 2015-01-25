@@ -133,15 +133,12 @@ define([
      */
     Map.prototype.removePlayer = function (player) {
         // console.log('Map#removePlayer', player);
-        // 1. Usuwamy obiekt
-        try {
-            player.destroy();
-        } catch (e) {
-            console.log('Map#removePlayer');
-        }
-        // 2. Usuwamy go z listy.
+        // 1. Usuwać z grupy Phasera
+        this._playersPhaser.removeChild(player);
+        // 2. Usuwamy obiekt
+        player.destroy();
+        // 3. Usuwamy go z listy.
         delete this._players[player.getID()];
-        // 3. Usuwać z grupy Phasera
     };
 
     /**

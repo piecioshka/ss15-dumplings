@@ -1,5 +1,6 @@
 define([
     'lodash',
+    'jquery',
     'backbone',
     'promise',
     'phaser',
@@ -7,7 +8,7 @@ define([
     'core/Map',
     'core/Player',
     'core/Storage'
-], function (_, Backbone, promise, Phaser, Configuration, Map, Player, Storage) {
+], function (_, $, Backbone, promise, Phaser, Configuration, Map, Player, Storage) {
     'use strict';
 
     var Game = function () {
@@ -46,6 +47,13 @@ define([
         this._fb.on('child_removed', function () {
             Storage.clear();
             location.reload(true);
+        });
+
+        $(window).on('beforeunload', function () {
+            var localPlayerID = Storage.get(Player.STORAGE_KEY);
+            var map = self.getSelectedMap();
+            var localPlayerInstance = map.getPlayerByID(localPlayerID);
+            map.removePlayer(localPlayerInstance);
         });
 
         _.each(this._maps, function (map, mapID) {

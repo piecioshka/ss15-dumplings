@@ -26,7 +26,7 @@ define([
 
         this._phaser = undefined;
         this._fb = undefined;
-        this.label = undefined;
+        this._label = undefined;
     };
 
     /**
@@ -87,14 +87,12 @@ define([
     Player.prototype.destroy = function () {
         // console.log('Player#destroy');
         // 1. Usunąć z Phaser.
-        try {
-            this._phaser.destroy();
-        } catch (e) {
-            console.log('Player#destroy');
-        }
-        // 2. Usuwamy playera ze storage-a
+        this._phaser.destroy();
+        // 2. Usunąć label z Phaser-a
+        this._label.destroy();
+        // 3. Usuwamy playera ze storage-a
         Storage.del(Player.STORAGE_KEY);
-        // 3. Usuwamy z Firebase
+        // 4. Usuwamy z Firebase
         this._fb.remove();
     };
 
