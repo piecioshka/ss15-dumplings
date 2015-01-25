@@ -78,6 +78,12 @@ define([
             this._fb.child(mapID + '/players').on('child_changed', function (snapshot) {
                 var snap = snapshot.val();
                 var playerInstance = map.getPlayerByID(snap.id);
+                var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+                if (playerInstance === localPlayerInstance) {
+                    return;
+                }
+
                 if (playerInstance) {
                     playerInstance.setPosition(snap.x, snap.y, true);
                     playerInstance.setScore(snap.score);
@@ -208,23 +214,28 @@ define([
 
     Game.prototype.update = function () {
         // console.log('Game#update');
-        var map = this._maps[this._selectedMapID];
-        var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+        if (!this.__cachedLocalPlayerInstance || !this.__cachedMap) {
+            this.__cachedMap = this._maps[this._selectedMapID];
+            this.__cachedLocalPlayerInstance = this.__cachedMap.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+        }
 
         // Może ktoś wyczyścił storage?
-        if (localPlayerInstance) {
-            this.setupCollisions();
-            localPlayerInstance.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
+        if (this.__cachedLocalPlayerInstance) {
+            this.setupCollisions(this.__cachedLocalPlayerInstance, this.__cachedMap);
+            this.__cachedLocalPlayerInstance.update(this._phaser, this._phaserCursors, this._phaserJumpButton);
         }
     };
 
-    Game.prototype.setupCollisions = function () {
+    Game.prototype.setupCollisions = function (localPlayerInstance, map) {
         // console.log('Game#setupCollisions');
-        var map = this._maps[this._selectedMapID];
-        var localPlayerInstance = map.getPlayerByID(Storage.get(Player.STORAGE_KEY));
 
-        this._phaser.physics.arcade.collide(map._playersPhaser, map._worldPhaser);
-        this._phaser.physics.arcade.overlap(map._playersPhaser, map._pointsPhaser, function (player, point) {
+        if (!this.__cachedArcade) {
+            this.__cachedArcade = this._phaser.physics.arcade;
+        }
+
+        this.__cachedArcade.collide(map._playersPhaser, map._worldPhaser);
+        this.__cachedArcade.overlap(map._playersPhaser, map._pointsPhaser, function (player, point) {
             var pointInstance = map.getPointByID(point.id);
             map.removePoint(pointInstance);
 
@@ -234,7 +245,7 @@ define([
         });
 
         // Żeby punkty trzymały sie ziemi.
-        this._phaser.physics.arcade.collide(map._pointsPhaser, map._worldPhaser);
+        this.__cachedArcade.collide(map._pointsPhaser, map._worldPhaser);
     };
 
     Game.prototype.start = function () {

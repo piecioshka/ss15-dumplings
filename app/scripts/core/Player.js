@@ -115,7 +115,7 @@ define([
      */
     Player.prototype.setScore = function (score) {
         // 1. Aktualizacja instancji
-        this._score = score || 0;
+        this._score = score;
     };
 
     /**
