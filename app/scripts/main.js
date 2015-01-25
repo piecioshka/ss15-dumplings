@@ -29,7 +29,7 @@
         'core/PointsManager'
     ], function (Firebase, App, Game, Player, PointsManager) {
         App.game = new Game();
-        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
+        App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game-pk'));
         App.game.fetchMaps(function () {
             App.game.setupEvents();
             App.game.selectMap(1);

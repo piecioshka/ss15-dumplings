@@ -44,6 +44,7 @@ define([
 
         // Jeśli usunęliśmy dowolną mapę z gry, to restartujemy całą gre.
         this._fb.on('child_removed', function () {
+            Storage.clear();
             location.reload(true);
         });
 
@@ -194,9 +195,11 @@ define([
                 localPlayer.setName(nick);
             }
             map.addPlayer(localPlayer);
-        }
 
-        map.render(this._phaser);
+            map.render(this._phaser);
+        } else {
+            throw new Error('localPlayer is not defined');
+        }
     };
 
     /**

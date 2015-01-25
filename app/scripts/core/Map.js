@@ -207,6 +207,10 @@ define([
 
         // 4. Kamera na graczu lokalnym.
         var localPlayerInstance = this.getPlayerByID(Storage.get(Player.STORAGE_KEY));
+
+        if (!localPlayerInstance) {
+            throw new Error('localPlayerInstance is not defined');
+        }
         localPlayerInstance.setCameraOnIt(phaser);
 
         // 5. Tworzymy grupę points-ów
