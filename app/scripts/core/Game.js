@@ -236,6 +236,16 @@ define([
         this._phaser.load.image('bg-niebo', 'assets/bg/niebo.png');
         this._phaser.load.image('bg-woda', 'assets/bg/woda.png');
 
+        this._phaser.load.image('tool-grunt', 'assets/tools/grunt.png');
+        this._phaser.load.image('tool-yeoman', 'assets/tools/yeoman.png');
+        this._phaser.load.image('tool-bower', 'assets/tools/bower.png');
+        this._phaser.load.image('tool-angular', 'assets/tools/angular.png');
+        this._phaser.load.image('tool-bootstrap', 'assets/tools/bootstrap.png');
+        this._phaser.load.image('tool-css3', 'assets/tools/css3.png');
+        this._phaser.load.image('tool-gulp', 'assets/tools/gulp.png');
+        this._phaser.load.image('tool-html5', 'assets/tools/html5.png');
+        this._phaser.load.image('tool-sass', 'assets/tools/sass.png');
+
         this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-3', 'assets/maps/map-3.json', null, Phaser.Tilemap.TILED_JSON);
@@ -249,7 +259,17 @@ define([
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
 
-        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, 'bg-github');
+        var backgrounds = [
+            'bg-github',
+            'bg-cegielki',
+            'bg-las',
+            'bg-miasto',
+            'bg-niebo',
+            'bg-woda'
+        ];
+        var picture = backgrounds[_.random(0, backgrounds.length - 1)];
+
+        var bg = this._phaser.add.tileSprite(0, 0, Configuration.MAX_WORLD_WIDTH, Configuration.MAX_WORLD_HEIGHT, picture);
         bg.fixedToCamera = true;
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
