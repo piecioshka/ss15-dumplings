@@ -92,7 +92,7 @@ define([
             _.each(snap.players, function (remotePlayer, playerID) {
                 var snapPlayer = snap.players[playerID];
 
-                var playerInstance = new Player(snapPlayer.x, snapPlayer.y);
+                var playerInstance = new Player(snapPlayer.x, snapPlayer.y, snapPlayer.figure);
                 playerInstance.setID(playerID);
                 playerInstance.setScore(snapPlayer.score);
 
@@ -102,7 +102,7 @@ define([
             _.each(snap.points, function (remotePoint, pointID) {
                 var snapPoints = snap.points[pointID];
 
-                var point = new Point(snapPoints.x, snapPoints.y, snapPoints.value);
+                var point = new Point(snapPoints.x, snapPoints.y, snapPoints.value, snapPoints.figure);
                 point.setID(pointID);
 
                 self.addPoint(point);

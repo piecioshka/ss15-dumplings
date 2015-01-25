@@ -64,6 +64,7 @@ define([
                     playerInstance = new Player(snap.x, snap.y);
                     playerInstance.setID(snap.id);
                     playerInstance.setScore(snap.score);
+                    playerInstance.setFigure(snap.figure);
                     playerInstance.render(self._phaser, map._playersPhaser);
                     map.addPlayer(playerInstance);
                 }
@@ -196,7 +197,19 @@ define([
     Game.prototype.preload = function () {
         // console.log('Game#preload');
         this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
-        this._phaser.load.image('tile-monkey', 'assets/images/tile-monkey.png');
+        this._phaser.load.image('background', 'assets/images/github.jpeg');
+
+        this._phaser.load.image('player-1', 'assets/tools/grunt.png');
+        this._phaser.load.image('player-2', 'assets/tools/yeoman.png');
+        this._phaser.load.image('player-3', 'assets/tools/bower.png');
+
+        this._phaser.load.image('point-1', 'assets/tools/angular.png');
+        this._phaser.load.image('point-2', 'assets/tools/bootstrap.png');
+        this._phaser.load.image('point-3', 'assets/tools/css3.png');
+        this._phaser.load.image('point-4', 'assets/tools/gulp.png');
+        this._phaser.load.image('point-5', 'assets/tools/html5.png');
+        this._phaser.load.image('point-6', 'assets/tools/sass.png');
+
         this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);
     };
@@ -205,6 +218,9 @@ define([
         // console.log('Game#create');
         this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
         this._phaser.stage.backgroundColor = '#fff';
+
+        var bg = this._phaser.add.tileSprite(0, 0, 1400, 900, 'background');
+        bg.fixedToCamera = true;
 
         this._phaserCursors = this._phaser.input.keyboard.createCursorKeys();
         this._phaserJumpButton = this._phaser.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

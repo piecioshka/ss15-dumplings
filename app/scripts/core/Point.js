@@ -10,14 +10,16 @@ define([
      * @param {number} x
      * @param {number} y
      * @param {number} [value=1]
+     * @param {string} [figure=Point.ANGULAR]
      * @constructor
      */
-    var Point = function (x, y, value) {
+    var Point = function (x, y, value, figure) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
         this.x = x;
         this.y = y;
         this._value = value || 1;
+        this._figure = figure || Point.ANGULAR;
 
         this._phaser = undefined;
         this._fb = undefined;
@@ -35,6 +37,10 @@ define([
      */
     Point.prototype.setID = function (id) {
         this._id = id;
+    };
+
+    Point.prototype.setFigure = function (figure) {
+        this._figure = figure;
     };
 
     /**
@@ -67,7 +73,8 @@ define([
             id: this._id,
             x: this.x,
             y: this.y,
-            value: this._value
+            value: this._value,
+            figure: this._figure
         });
     };
 
@@ -80,7 +87,7 @@ define([
 
     Point.prototype.render = function (phaser, pointsPhaser) {
         // console.log('Point#render');
-        this._phaser = phaser.add.tileSprite(this.x, this.y, 32, 32, 'tile-ground', 3);
+        this._phaser = phaser.add.tileSprite(this.x, this.y, 32, 32, this._figure, 3);
         this._phaser.id = this._id;
 
         phaser.physics.enable(this._phaser, Phaser.Physics.ARCADE);
@@ -93,6 +100,13 @@ define([
         // 2. Dodajemy do grupy Phaser
         pointsPhaser.add(this._phaser);
     };
+
+    Point.ANGULAR = 'point-1';
+    Point.BOOTSTRAP = 'point-2';
+    Point.CSS3 = 'point-3';
+    Point.GULP = 'point-4';
+    Point.HTML5 = 'point-5';
+    Point.SASS = 'point-6';
 
     return Point;
 });
