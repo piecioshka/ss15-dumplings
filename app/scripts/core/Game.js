@@ -186,6 +186,13 @@ define([
 
         // Może się jeszcze nie stworzył?
         if (localPlayer) {
+            if (localPlayer.isDefaultName()) {
+                var nick = prompt(Game.MSG_GET_NICK);
+                if (!nick) {
+                    location.reload(true);
+                }
+                localPlayer.setName(nick);
+            }
             map.addPlayer(localPlayer);
         }
 
@@ -275,6 +282,8 @@ define([
     Game.prototype.getSelectedMap = function () {
         return this._maps[this._selectedMapID];
     };
+
+    Game.MSG_GET_NICK = 'Type your nick:';
 
     return Game;
 });

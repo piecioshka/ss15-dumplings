@@ -26,9 +26,8 @@
         'core/App',
         'core/Game',
         'core/Player',
-        'core/PointsManager',
-        'core/Storage'
-    ], function (Firebase, App, Game, Player, PointsManager, Storage) {
+        'core/PointsManager'
+    ], function (Firebase, App, Game, Player, PointsManager) {
         App.game = new Game();
         App.game.setFirebaseConnection(new Firebase('https://dumplings.firebaseio.com/game'));
         App.game.fetchMaps(function () {
@@ -38,11 +37,6 @@
 
             PointsManager.listen(App.game);
         });
-
-        if (!Storage.get(Player.STORAGE_NICK_KEY)) {
-            var nickValue = window.prompt('Type your nick:');
-            Storage.put(Player.STORAGE_NICK_KEY, nickValue);
-        }
 
         // Exports
         root.App = App;

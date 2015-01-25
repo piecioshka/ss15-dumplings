@@ -20,7 +20,7 @@ define([
         this.x = x;
         this.y = y;
 
-        this._name = Storage.get(Player.STORAGE_NICK_KEY) || Player.DEFAULT_NICK;
+        this._name = Player.DEFAULT_NAME;
         this._score = 0;
         this._figure = figure || Player.YEOMAN;
 
@@ -54,7 +54,11 @@ define([
      * @param {string} name
      */
     Player.prototype.setName = function (name) {
-        this._name = name || Player.DEFAULT_NICK;
+        this._name = name;
+    };
+
+    Player.prototype.isDefaultName = function () {
+        return this._name === Player.DEFAULT_NAME;
     };
 
     /**
@@ -218,10 +222,8 @@ define([
     Player.YEOMAN = 'tool-yeoman';
     Player.BOWER = 'tool-bower';
 
+    Player.DEFAULT_NAME = 'noname';
     Player.STORAGE_KEY = 'ss15-dumplings-player';
-    Player.STORAGE_NICK_KEY = 'ss15-dumplings-nick';
-
-    Player.DEFAULT_NICK = 'noname';
 
     Player.LABEL_DISTANCE = 18;
     Player.LABEL_STYLE = {
@@ -229,7 +231,6 @@ define([
         fill: '#F00',
         align: 'center'
     };
-
 
     return Player;
 });
