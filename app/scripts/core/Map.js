@@ -94,6 +94,7 @@ define([
 
                 var playerInstance = new Player(snapPlayer.x, snapPlayer.y, snapPlayer.figure);
                 playerInstance.setID(playerID);
+                playerInstance.setName(snapPlayer.name);
                 playerInstance.setScore(snapPlayer.score);
 
                 self.addPlayer(playerInstance);

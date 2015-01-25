@@ -20,19 +20,13 @@ define([
         this.x = x;
         this.y = y;
 
+        this._name = 'noname';
         this._score = 0;
         this._figure = figure || Player.YEOMAN;
 
         this._phaser = undefined;
         this._fb = undefined;
         this.label = undefined;
-    };
-
-    Player.LABEL_DISTANCE = 18;
-    Player.LABEL_STYLE = {
-        font: '11px Tahoma',
-        fill: '#F00',
-        align: 'center'
     };
 
     /**
@@ -47,6 +41,43 @@ define([
      */
     Player.prototype.setID = function (id) {
         this._id = id;
+    };
+
+    /**
+     * @returns {string}
+     */
+    Player.prototype.getName = function () {
+        return this._name;
+    };
+
+    /**
+     * @param {string} name
+     */
+    Player.prototype.setName = function (name) {
+        this._name = name;
+    };
+
+    /**
+     * @returns {number}
+     */
+    Player.prototype.getScore = function () {
+        return this._score || 0;
+    };
+
+    /**
+     * @param {number} score
+     */
+    Player.prototype.setScore = function (score) {
+        // 1. Aktualizacja instancji
+        this._score = score;
+    };
+
+    /**
+     * @param {string} figure
+     */
+    Player.prototype.setFigure = function (figure) {
+        // 1. Aktualizacja instancji
+        this._figure = figure;
     };
 
     Player.prototype.destroy = function () {
@@ -70,6 +101,7 @@ define([
             id: this._id,
             x: this.x,
             y: this.y,
+            name: this._name,
             score: this._score,
             figure: this._figure
         });
@@ -124,22 +156,6 @@ define([
     };
 
     /**
-     * @param {number} score
-     */
-    Player.prototype.setScore = function (score) {
-        // 1. Aktualizacja instancji
-        this._score = score;
-    };
-
-    /**
-     * @param {string} figure
-     */
-    Player.prototype.setFigure = function (figure) {
-        // 1. Aktualizacja instancji
-        this._figure = figure;
-    };
-
-    /**
      * @param {Firebase} connection
      */
     Player.prototype.setFirebaseConnection = function (connection) {
@@ -161,7 +177,7 @@ define([
         this._phaser.x = this.x;
         this._phaser.y = this.y;
 
-        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), this.getNick(), Player.LABEL_STYLE);
+        this._label = phaser.add.text(this.x, (this.y - Player.LABEL_DISTANCE), this.getName(), Player.LABEL_STYLE);
 
         var localPlayerID = Storage.get(Player.STORAGE_KEY);
 
@@ -197,22 +213,20 @@ define([
         this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
 
-    Player.prototype.getNick = function () {
-        return this._id;
-    };
-
-    /**
-     * @returns {number}
-     */
-    Player.prototype.getScore = function () {
-        return this._score || 0;
-    };
 
     Player.GRUNT = 'tool-grunt';
     Player.YEOMAN = 'tool-yeoman';
     Player.BOWER = 'tool-bower';
 
     Player.STORAGE_KEY = 'ss15-dumplings-player';
+
+    Player.LABEL_DISTANCE = 18;
+    Player.LABEL_STYLE = {
+        font: '11px Tahoma',
+        fill: '#F00',
+        align: 'center'
+    };
+
 
     return Player;
 });

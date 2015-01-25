@@ -47,7 +47,7 @@ define([
 
                 resultsTable = _.map(players, function (player) {
                     return {
-                        name: player.getNick(),
+                        name: player.getName(),
                         score: player.getScore()
                     };
                 });
