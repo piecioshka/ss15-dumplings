@@ -8,6 +8,10 @@ define([
 ], function (_, Backbone, Firebase, Utilities, Player, Point) {
     'use strict';
 
+    /**
+     * @param {number} stage
+     * @constructor
+     */
     var World = function (stage) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
@@ -64,6 +68,9 @@ define([
         delete this._points[point.getID()];
     };
 
+    /**
+     * @param {Function} cb
+     */
     World.prototype.loadChildren = function (cb) {
         var self = this;
 
@@ -108,6 +115,9 @@ define([
         player.sync();
     };
 
+    /**
+     * @param {Player} player
+     */
     World.prototype.removePlayer = function (player) {
         console.log('World#removePlayer', player);
         // 1. Usuwamy obiekt
@@ -150,7 +160,7 @@ define([
     };
 
     World.prototype.render = function () {
-        // 1. Coś z Phaserem
+        // 1. Zbudować mapę za pomocą Phaser-a.
     };
 
     /**

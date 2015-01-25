@@ -5,6 +5,12 @@ define([
 ], function (_, Backbone, Utilities) {
     'use strict';
 
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} [value=1]
+     * @constructor
+     */
     var Point = function (x, y, value) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
@@ -23,6 +29,9 @@ define([
         return this._id;
     };
 
+    /**
+     * @param {number} id
+     */
     Point.prototype.setID = function (id) {
         this._id = id;
     };
@@ -31,6 +40,9 @@ define([
         // 1. Usunąć z Phaser.
     };
 
+    /**
+     * @returns {number}
+     */
     Point.prototype.getValue = function () {
         return this._value;
     };

@@ -33,6 +33,9 @@ define([
         });
     };
 
+    /**
+     * @param {Function} cb
+     */
     Game.prototype.fetchWorlds = function (cb) {
         var self = this;
 
@@ -62,6 +65,9 @@ define([
         });
     };
 
+    /**
+     * @param {number} stage
+     */
     Game.prototype.selectWorld = function (stage) {
         var cachedSelectedWorldID = this._selectedWorldID;
 

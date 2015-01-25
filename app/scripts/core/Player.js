@@ -6,6 +6,11 @@ define([
 ], function (_, Backbone, Utilities, Storage) {
     'use strict';
 
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @constructor
+     */
     var Player = function (x, y) {
         _.extend(this, Backbone.Events);
         this._id = Utilities.guid();
@@ -26,6 +31,9 @@ define([
         return this._id;
     };
 
+    /**
+     * @param {string} id
+     */
     Player.prototype.setID = function (id) {
         this._id = id;
     };
@@ -65,10 +73,13 @@ define([
 
     /**
      * @param {Point} point
+     * @param {boolean} [silent=false]
      */
-    Player.prototype.addCollectedPoints = function (point) {
+    Player.prototype.addCollectedPoints = function (point, silent) {
         // 1. Aktualizacja instancji
         this._collectedPoints += point.getValue();
+
+        if (silent) return;
 
         // 2. Uruchomienie zdarzenia `change:position`.
         this.trigger(Player.EVENTS.CHANGE_POSITION);
