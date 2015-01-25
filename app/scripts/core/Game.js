@@ -183,7 +183,7 @@ define([
         this._phaser.physics.arcade.collide(map._worldPhaser, map._pointsPhaser);
         this._phaser.physics.arcade.collide(map._playersPhaser, map._pointsPhaser, function (player, point) {
             var pointInstance = map.getPointByID(point.id);
-            pointInstance.destroy();
+            map.removePoint(pointInstance);
 
             if (player.id === localPlayer.getID()) {
                 localPlayer.addCollectedPoints(pointInstance);
