@@ -203,16 +203,15 @@ define([
         this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
         this._phaser.load.image('background', 'assets/images/github.jpeg');
 
-        this._phaser.load.image('player-1', 'assets/tools/grunt.png');
-        this._phaser.load.image('player-2', 'assets/tools/yeoman.png');
-        this._phaser.load.image('player-3', 'assets/tools/bower.png');
-
-        this._phaser.load.image('point-1', 'assets/tools/angular.png');
-        this._phaser.load.image('point-2', 'assets/tools/bootstrap.png');
-        this._phaser.load.image('point-3', 'assets/tools/css3.png');
-        this._phaser.load.image('point-4', 'assets/tools/gulp.png');
-        this._phaser.load.image('point-5', 'assets/tools/html5.png');
-        this._phaser.load.image('point-6', 'assets/tools/sass.png');
+        this._phaser.load.image('tool-grunt', 'assets/tools/grunt.png');
+        this._phaser.load.image('tool-yeoman', 'assets/tools/yeoman.png');
+        this._phaser.load.image('tool-bower', 'assets/tools/bower.png');
+        this._phaser.load.image('tool-angular', 'assets/tools/angular.png');
+        this._phaser.load.image('tool-bootstrap', 'assets/tools/bootstrap.png');
+        this._phaser.load.image('tool-css3', 'assets/tools/css3.png');
+        this._phaser.load.image('tool-gulp', 'assets/tools/gulp.png');
+        this._phaser.load.image('tool-html5', 'assets/tools/html5.png');
+        this._phaser.load.image('tool-sass', 'assets/tools/sass.png');
 
         this._phaser.load.tilemap('map-1', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
         this._phaser.load.tilemap('map-2', 'assets/maps/map-2.json', null, Phaser.Tilemap.TILED_JSON);

@@ -101,12 +101,12 @@ define([
         pointsPhaser.add(this._phaser);
     };
 
-    Point.ANGULAR = 'point-1';
-    Point.BOOTSTRAP = 'point-2';
-    Point.CSS3 = 'point-3';
-    Point.GULP = 'point-4';
-    Point.HTML5 = 'point-5';
-    Point.SASS = 'point-6';
+    Point.ANGULAR = 'tool-angular';
+    Point.BOOTSTRAP = 'tool-bootstrap';
+    Point.CSS3 = 'tool-css3';
+    Point.GULP = 'tool-gulp';
+    Point.HTML5 = 'tool-html5';
+    Point.SASS = 'tool-sass';
 
     return Point;
 });

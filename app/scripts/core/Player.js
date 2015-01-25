@@ -180,9 +180,9 @@ define([
         this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
 
-    Player.GRUNT = 'player-1';
-    Player.YEOMAN = 'player-2';
-    Player.BOWER = 'player-3';
+    Player.GRUNT = 'tool-grunt';
+    Player.YEOMAN = 'tool-yeoman';
+    Player.BOWER = 'tool-bower';
 
     Player.STORAGE_KEY = 'ss15-dumplings-player';
 
