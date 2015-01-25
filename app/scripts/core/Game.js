@@ -63,6 +63,7 @@ define([
                 if (!playerInstance) {
                     playerInstance = new Player(snap.x, snap.y);
                     playerInstance.setID(snap.id);
+                    playerInstance.setScore(snap.score);
                     playerInstance.render(self._phaser, map._playersPhaser);
                     map.addPlayer(playerInstance);
                 }
