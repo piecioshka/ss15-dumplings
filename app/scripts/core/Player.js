@@ -222,7 +222,6 @@ define([
         this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
 
-
     Player.GRUNT = 'tool-grunt';
     Player.YEOMAN = 'tool-yeoman';
     Player.BOWER = 'tool-bower';
