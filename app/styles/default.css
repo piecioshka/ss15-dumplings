@@ -42,7 +42,6 @@ body {
 
 #results-list ul li strong {
     font-weight: bold;
-    width: 25px;
     display: inline-block;
     text-align: right;
 }
