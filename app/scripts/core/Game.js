@@ -2,10 +2,12 @@ define([
     'lodash',
     'backbone',
     'promise',
+    'phaser',
+    'core/Configuration',
     'core/World',
     'core/Player',
     'core/Storage'
-], function (_, Backbone, promise, World, Player, Storage) {
+], function (_, Backbone, promise, Phaser, Configuration, World, Player, Storage) {
     'use strict';
 
     var Game = function () {
@@ -13,8 +15,26 @@ define([
         this._worlds = {};
         this._selectedWorldID = undefined;
         this._fb = undefined;
+        this._phaser = new Phaser.Game(Configuration.WINDOW_WIDTH, Configuration.WINDOW_HEIGHT, Phaser.CANVAS, 'playground', {
+            preload: this.loadAssets.bind(this),
+            create: this.render.bind(this),
+
+            update: function () {
+                console.log('update');
+            },
+
+            render: function () {
+                console.log('render');
+            }
+        });
 
         console.info('Game was created at: %s', new Date());
+    };
+
+    Game.prototype.loadAssets = function () {
+        this._phaser.load.spritesheet('tile-ground', 'assets/images/tile-ground.png', 32, 32);
+        this._phaser.load.image('tile-monkey', 'assets/images/tile-monkey.png');
+        this._phaser.load.tilemap('map', 'assets/maps/map-1.json', null, Phaser.Tilemap.TILED_JSON);
     };
 
     /**
@@ -122,7 +142,7 @@ define([
         }
 
         world.addPlayer(localPlayer);
-        world.render();
+        world.render(this._phaser);
     };
 
     /**
@@ -130,6 +150,11 @@ define([
      */
     Game.prototype.setFirebaseConnection = function (connection) {
         this._fb = connection;
+    };
+
+    Game.prototype.render = function () {
+        this._phaser.physics.startSystem(Phaser.Physics.ARCADE);
+        this._phaser.stage.backgroundColor = '#fff';
     };
 
     return Game;

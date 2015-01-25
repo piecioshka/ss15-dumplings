@@ -1,8 +1,7 @@
-#playground {
-    border: 4px solid #eee;
-    float: left;
+body {
+    margin: 0;
 }
-.reset {
-    clear: both;
+
+#playground {
     float: left;
 }
