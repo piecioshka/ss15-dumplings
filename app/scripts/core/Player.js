@@ -185,6 +185,17 @@ define([
         this.setPosition(Math.round(this._phaser.x), Math.round(this._phaser.y));
     };
 
+    Player.prototype.getNick = function () {
+        return this._id;
+    };
+
+    /**
+     * @returns {number}
+     */
+    Player.prototype.getScore = function () {
+        return this._score || 0;
+    };
+
     Player.GRUNT = 'tool-grunt';
     Player.YEOMAN = 'tool-yeoman';
     Player.BOWER = 'tool-bower';

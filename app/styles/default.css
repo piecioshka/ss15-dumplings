@@ -13,28 +13,60 @@ body {
     margin: 0 auto;
 }
 
-.scoreListButton {
+a#show-results-list {
     position: absolute;
+    top: 3px;
+    left: 3px;
     padding: 5px;
+
+    color: #eee;
+    background-color: rgba(4, 4, 4, 0.80);
     border: 1px solid #333;
-    color: #FFF;
-    background-color: #000;
-    font-weight: bold;
+    border-radius: 3px;
+
+    font-size: 14px;
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
     cursor: pointer;
+    outline: none;
+
+    transition: all 0.5s;
+    overflow: hidden;
+    display: block;
 }
-.scoreListButton:hover {
+
+a#show-results-list:hover {
     border-color: #FFF;
+    text-decoration: none;
 }
-.scoreList {
-    display: none;
+
+#results-list {
+    opacity: 0;
     position: absolute;
-    margin-top: 30px;
-    background-color: #000;
-    color: #FFF;
+    top: 40px;
+    left: 3px;
+
+    color: #eee;
+    background-color: rgba(4, 4, 4, 0.80);
+
+    font-size: 14px;
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+
     padding: 5px 10px;
+    border-radius: 3px;
+    transition: all 0.5s;
 }
-.scoreList ul {
+
+#results-list ul {
     list-style: none;
-    margin: 5px;
+    margin: 5px 5px 5px 0;
     padding: 0;
+    text-align: left;
+}
+
+#results-list ul li.winner {
+    color: #64b4ff;
+}
+
+#results-list ul li strong {
+    font-weight: bold;
 }
