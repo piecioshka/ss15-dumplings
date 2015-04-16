@@ -38,8 +38,10 @@
         util.log(util.colors.yellow('Finished building.'));
     });
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     gulp.task('count', 'Count LOC of each *.js file in `app/scripts/core`.', shell.task([
-        'find app/scripts/core -name "*.js" | xargs wc -l | sort -r'
+        'find app/scripts -name "*.js" -not -path "app/scripts/vendor*"| xargs wc -l | sort -r'
     ]));
 
     module.exports = gulp;

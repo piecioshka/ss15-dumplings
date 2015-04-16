@@ -227,7 +227,6 @@ define([
     Game.prototype.preload = function () {
         // console.log('Game#preload');
         this._phaser.load.spritesheet('tiles', 'assets/tiles.png', 32, 32);
-        // this._phaser.load.spritesheet('tools', 'assets/tools.png', 32, 32);
 
         this._phaser.load.image('bg-github', 'assets/bg/github.jpeg');
         this._phaser.load.image('bg-cegielki', 'assets/bg/cegielki.png');
