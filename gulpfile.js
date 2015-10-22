@@ -3,7 +3,6 @@
 
     var gulp = require('gulp');
     var util = require('gulp-util');
-    var shell = require('gulp-shell');
     var rjs = require('requirejs');
     var del = require('del');
     var Q = require('q');
@@ -39,10 +38,6 @@
     });
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    gulp.task('count', 'Count LOC of each *.js file in `app/scripts/core`.', shell.task([
-        'find app/scripts -name "*.js" -not -path "app/scripts/vendor*"| xargs wc -l | sort -r'
-    ]));
 
     module.exports = gulp;
 }());

@@ -20,11 +20,13 @@
     "type": "git",
     "url": "git+https://github.com/staticshowdown/ss15-dumplings"
   },
+  "scrpts": {
+      "count": "find app/scripts -name '*.js' -not -path 'app/scripts/vendor*' | xargs wc -l | sort -r"
+  },
   "devDependencies": {
     "gulp": "latest",
     "gulp-util": "latest",
     "gulp-help": "latest",
-    "gulp-shell": "latest",
     "requirejs": "latest",
     "del": "latest",
     "q": "latest"
