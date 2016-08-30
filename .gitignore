@@ -1,6 +1,5 @@
-.divshot-cache
-.idea/
-nbproject/
-dist/
 node_modules/
 npm-debug.log
+
+.divshot-cache
+dist/

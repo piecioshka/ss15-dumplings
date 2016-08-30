@@ -1,34 +1,35 @@
 {
-  "name": "ss15-dumplings",
-  "version": "0.1.0",
-  "author": "ss15-dumplings team",
-  "contributors": [
-    {
-      "name": "Konrad Kowalski",
-      "email": "rootsher@gmail.com"
+    "name": "ss15-dumplings",
+    "version": "0.1.0",
+    "author": "ss15-dumplings team",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/staticshowdown/ss15-dumplings"
     },
-    {
-      "name": "Piotr Kowalski",
-      "email": "piecioshka@gmail.com"
+    "scripts": {
+        "build": "gulp build",
+        "count": "find app/scripts -name '*.js' -not -path 'app/scripts/vendors*' | xargs wc -l | sort -r"
     },
-    {
-      "name": "Kamil Załęski",
-      "email": "kamil.zaleski@gmail.com"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/staticshowdown/ss15-dumplings"
-  },
-  "scrpts": {
-      "count": "find app/scripts -name '*.js' -not -path 'app/scripts/vendor*' | xargs wc -l | sort -r"
-  },
-  "devDependencies": {
-    "gulp": "latest",
-    "gulp-util": "latest",
-    "gulp-help": "latest",
-    "requirejs": "latest",
-    "del": "latest",
-    "q": "latest"
-  }
+    "devDependencies": {
+        "gulp": "latest",
+        "gulp-util": "latest",
+        "gulp-help": "latest",
+        "requirejs": "latest",
+        "del": "latest",
+        "q": "latest"
+    },
+    "contributors": [
+        {
+            "name": "Konrad Kowalski",
+            "email": "rootsher@gmail.com"
+        },
+        {
+            "name": "Piotr Kowalski",
+            "email": "piecioshka@gmail.com"
+        },
+        {
+            "name": "Kamil Załęski",
+            "email": "kamil.zaleski@gmail.com"
+        }
+    ]
 }

@@ -3,12 +3,12 @@
 
     require.config({
         paths: {
-            firebase: 'vendor/firebase',
-            jquery: 'vendor/jquery',
-            backbone: 'vendor/backbone',
-            lodash: 'vendor/lodash',
-            phaser: 'vendor/phaser',
-            promise: 'vendor/promise'
+            firebase: 'vendors/firebase',
+            jquery: 'vendors/jquery',
+            backbone: 'vendors/backbone',
+            lodash: 'vendors/lodash',
+            phaser: 'vendors/phaser',
+            promise: 'vendors/promise'
         },
 
         shim: {
