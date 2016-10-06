@@ -5,8 +5,8 @@
 ## Deploy
 
 ```
-divshot push                            # push na http://development.ss15-dumplings.divshot.io/
-divshot promote development production  # push na http://ss15-dumplings.divshot.io/
+$ divshot push                            # push na http://development.ss15-dumplings.divshot.io/
+$ divshot promote development production  # push na http://ss15-dumplings.divshot.io/
 ```
 
 ## Opis
@@ -35,13 +35,13 @@ Grafika w stylu geek-owskim: jakieś postacie z frontendu (np. zabijanie jQuery)
 * [ ] zbieranie życia
 * [ ] rundy - czasowe ograniczenie - countdown
 
-### Kamil
+### Etap 3
 
 * [ ] postacie (x, y) pojawiają się losowo na mapce
 * [ ] zbierają coś
 * [ ] zabezpieczenie komunikacji
 
-### Linki
+## Linki
 
 * UTC Time: http://www.worldtimeserver.com/current_time_in_UTC.aspx
 * Competition description: https://github.com/staticshowdown/lowdown/wiki
