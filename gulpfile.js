@@ -33,5 +33,5 @@ gulp.task('clean-dist', 'Remove logs.', ['optimize'], function (cb) {
 });
 
 gulp.task('build', 'Building application', ['optimize', 'clean-dist'], function () {
-    util.log(util.colors.yellow('Finished building.'));
+    util.log(util.colors.yellow('Build complete'));
 });
